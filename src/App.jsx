@@ -6,6 +6,7 @@ import { useI18n } from './core/i18n/index.jsx'
 import { useAppStore } from './core/store/useAppStore.js'
 import { cloudData } from './core/supabaseClient.js'
 import { syncNow } from './core/driveSync.js'
+import { preload as preloadDrive } from './core/drive.js'
 import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
@@ -30,6 +31,7 @@ export default function App() {
 
   useEffect(() => {
     if (cloudData) hydrate()
+    preloadDrive() // charge Google Identity tôt (fiabilité du login mobile)
   }, [hydrate])
 
   // Synchro Drive : au chargement (pull) + à la fermeture/mise en arrière-plan (push)

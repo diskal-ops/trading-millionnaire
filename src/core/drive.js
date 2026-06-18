@@ -33,6 +33,12 @@ function loadGis() {
   return gisReady
 }
 
+// À appeler tôt (au chargement de l'app) pour que Google soit prêt
+// AVANT le clic → évite le blocage de la fenêtre par le navigateur mobile.
+export function preload() {
+  return getTokenClient().catch(() => {})
+}
+
 let tokenClient
 async function getTokenClient() {
   await loadGis()
