@@ -101,5 +101,12 @@
   "lot.lot": "Lot",
   "lot.default10": "Default stake (10% of balance)",
   "lot.grid": "Grid — lot = stake ÷ distance",
-  "lot.lotWarn": "Lot at 2: numbers move faster → more stress. Read structure, not money."
+  "lot.lotWarn": "Lot at 2: numbers move faster → more stress. Read structure, not money.",
+  "drive.title": "Google Drive sync",
+  "drive.desc": "Connect your Google account to find your data on all your devices (PC and phone).",
+  "drive.connect": "Sign in with Google",
+  "drive.syncNow": "Sync now",
+  "drive.syncing": "Syncing…",
+  "drive.synced": "Last sync",
+  "drive.error": "Sync failed"
 }

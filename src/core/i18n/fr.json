@@ -101,5 +101,12 @@
   "lot.lot": "Lot",
   "lot.default10": "Mise par défaut (10% de la balance)",
   "lot.grid": "Grille — lot = mise ÷ distance",
-  "lot.lotWarn": "Lot à 2 : les chiffres bougent plus vite → plus de stress. Lis la structure, pas l'argent."
+  "lot.lotWarn": "Lot à 2 : les chiffres bougent plus vite → plus de stress. Lis la structure, pas l'argent.",
+  "drive.title": "Synchro Google Drive",
+  "drive.desc": "Connecte ton compte Google pour retrouver tes données sur tous tes appareils (PC et téléphone).",
+  "drive.connect": "Se connecter avec Google",
+  "drive.syncNow": "Synchroniser maintenant",
+  "drive.syncing": "Synchro en cours…",
+  "drive.synced": "Dernière synchro",
+  "drive.error": "Échec de la synchro"
 }

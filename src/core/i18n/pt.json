@@ -101,5 +101,12 @@
   "lot.lot": "Lote",
   "lot.default10": "Aposta padrão (10% do saldo)",
   "lot.grid": "Grelha — lote = aposta ÷ distância",
-  "lot.lotWarn": "Lote a 2: os números mexem mais depressa → mais stress. Lê a estrutura, não o dinheiro."
+  "lot.lotWarn": "Lote a 2: os números mexem mais depressa → mais stress. Lê a estrutura, não o dinheiro.",
+  "drive.title": "Sincronização Google Drive",
+  "drive.desc": "Liga a tua conta Google para encontrar os teus dados em todos os dispositivos (PC e telemóvel).",
+  "drive.connect": "Iniciar sessão com Google",
+  "drive.syncNow": "Sincronizar agora",
+  "drive.syncing": "A sincronizar…",
+  "drive.synced": "Última sincronização",
+  "drive.error": "Falha na sincronização"
 }

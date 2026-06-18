@@ -5,6 +5,7 @@ import { getAllRoutes } from './core/moduleRegistry.js'
 import { useI18n } from './core/i18n/index.jsx'
 import { useAppStore } from './core/store/useAppStore.js'
 import { cloudData } from './core/supabaseClient.js'
+import { syncNow } from './core/driveSync.js'
 import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
@@ -25,10 +26,22 @@ export default function App() {
   const { t } = useI18n()
   const moduleRoutes = getAllRoutes()
   const hydrate = useAppStore((s) => s.hydrateFromSupabase)
+  const driveEnabled = useAppStore((s) => s.driveEnabled)
 
   useEffect(() => {
     if (cloudData) hydrate()
   }, [hydrate])
+
+  // Synchro Drive : au chargement (pull) + à la fermeture/mise en arrière-plan (push)
+  useEffect(() => {
+    if (!driveEnabled) return
+    syncNow({ silent: true }).catch(() => {})
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') syncNow({ silent: true }).catch(() => {})
+    }
+    document.addEventListener('visibilitychange', onHide)
+    return () => document.removeEventListener('visibilitychange', onHide)
+  }, [driveEnabled])
 
   return (
     <div className="app-shell">

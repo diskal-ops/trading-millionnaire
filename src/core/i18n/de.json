@@ -101,5 +101,12 @@
   "lot.lot": "Lot",
   "lot.default10": "Standard-Einsatz (10% des Kontostands)",
   "lot.grid": "Raster — Lot = Einsatz ÷ Distanz",
-  "lot.lotWarn": "Lot bei 2: Zahlen bewegen sich schneller → mehr Stress. Lies die Struktur, nicht das Geld."
+  "lot.lotWarn": "Lot bei 2: Zahlen bewegen sich schneller → mehr Stress. Lies die Struktur, nicht das Geld.",
+  "drive.title": "Google Drive-Sync",
+  "drive.desc": "Verbinde dein Google-Konto, um deine Daten auf allen Geräten (PC und Handy) zu finden.",
+  "drive.connect": "Mit Google anmelden",
+  "drive.syncNow": "Jetzt synchronisieren",
+  "drive.syncing": "Synchronisiere…",
+  "drive.synced": "Letzte Synchronisierung",
+  "drive.error": "Synchronisierung fehlgeschlagen"
 }

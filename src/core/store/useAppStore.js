@@ -16,6 +16,13 @@ const todayISO = () => new Date().toISOString().slice(0, 10)
 export const useAppStore = create(
   persist(
     (set, get) => ({
+      // --- Synchro Drive ---
+      updatedAt: 0, // horodatage de la dernière modification (pour la fusion)
+      driveEnabled: false,
+      lastSync: 0,
+      setDriveEnabled: (v) => set({ driveEnabled: Boolean(v) }),
+      setLastSync: (t) => set({ lastSync: t }),
+
       // --- Escalier / argent ---
       balance: 480, // valeur réelle actuelle (Ernesto)
       previousHigh: 820, // ancien plus-haut (thermostat, rouge)
@@ -24,18 +31,19 @@ export const useAppStore = create(
         set((s) => ({
           balance: Number(v) || 0,
           previousHigh: Math.max(s.previousHigh, Number(v) || 0),
+          updatedAt: Date.now(),
         })),
 
       // --- Discipline (course de fond) : { 'YYYY-MM-DD': 'won' | 'lost' } ---
       discipline: {},
       markDiscipline: (won, date = todayISO()) =>
-        set((s) => ({ discipline: { ...s.discipline, [date]: won ? 'won' : 'lost' } })),
+        set((s) => ({ discipline: { ...s.discipline, [date]: won ? 'won' : 'lost' }, updatedAt: Date.now() })),
 
       // --- Mental Hand History (Tendler) ---
       mhhEntries: [],
       saveMHH: (entry) => {
         const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
-        set((s) => ({ mhhEntries: [e, ...s.mhhEntries] }))
+        set((s) => ({ mhhEntries: [e, ...s.mhhEntries], updatedAt: Date.now() }))
         if (cloudData) get()._syncRow('mhh', e)
         return e
       },
@@ -44,7 +52,7 @@ export const useAppStore = create(
       successJournal: [],
       addSuccess: (entry) => {
         const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
-        set((s) => ({ successJournal: [e, ...s.successJournal] }))
+        set((s) => ({ successJournal: [e, ...s.successJournal], updatedAt: Date.now() }))
         if (cloudData) get()._syncRow('success_journal', e)
         return e
       },
@@ -58,7 +66,7 @@ export const useAppStore = create(
           const existing = s.dailyLog.find((d) => d.date === date)
           const merged = { date, patterns_detectes: [], ...existing, ...patch }
           const rest = s.dailyLog.filter((d) => d.date !== date)
-          return { dailyLog: [...rest, merged] }
+          return { dailyLog: [...rest, merged], updatedAt: Date.now() }
         })
         if (cloudData) get()._syncDailyLog(date)
       },
@@ -78,7 +86,7 @@ export const useAppStore = create(
       sessions: [],
       saveSession: (session) => {
         const entry = { id: crypto.randomUUID(), date: todayISO(), ...session }
-        set((s) => ({ sessions: [entry, ...s.sessions] }))
+        set((s) => ({ sessions: [entry, ...s.sessions], updatedAt: Date.now() }))
         if (cloudData) get()._syncSession(entry)
         return entry
       },
@@ -110,6 +118,7 @@ export const useAppStore = create(
         return {
           _kijun: 1,
           exportedAt: new Date().toISOString(),
+          updatedAt: s.updatedAt || 0,
           balance: s.balance,
           previousHigh: s.previousHigh,
           dailyLog: s.dailyLog,

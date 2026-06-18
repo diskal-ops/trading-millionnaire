@@ -101,5 +101,12 @@
   "lot.lot": "Lote",
   "lot.default10": "Apuesta por defecto (10% del saldo)",
   "lot.grid": "Cuadrícula — lote = apuesta ÷ distancia",
-  "lot.lotWarn": "Lote a 2: los números se mueven más rápido → más estrés. Lee la estructura, no el dinero."
+  "lot.lotWarn": "Lote a 2: los números se mueven más rápido → más estrés. Lee la estructura, no el dinero.",
+  "drive.title": "Sincronización Google Drive",
+  "drive.desc": "Conecta tu cuenta de Google para encontrar tus datos en todos tus dispositivos (PC y teléfono).",
+  "drive.connect": "Iniciar sesión con Google",
+  "drive.syncNow": "Sincronizar ahora",
+  "drive.syncing": "Sincronizando…",
+  "drive.synced": "Última sincronización",
+  "drive.error": "Error de sincronización"
 }
