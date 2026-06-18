@@ -108,5 +108,7 @@
   "drive.syncNow": "Sync now",
   "drive.syncing": "Syncing…",
   "drive.synced": "Last sync",
-  "drive.error": "Sync failed"
+  "drive.error": "Sync failed",
+  "drive.statusOn": "Connected",
+  "drive.statusOff": "Not connected"
 }

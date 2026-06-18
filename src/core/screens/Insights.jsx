@@ -54,7 +54,12 @@ export default function Insights() {
 
       {/* Synchro multi-appareils via Google Drive */}
       <Card tone={driveEnabled ? 'calm' : undefined}>
-        <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>☁️ {t('drive.title')}</div>
+        <div className="spread" style={{ marginBottom: 8 }}>
+          <span className="faint" style={{ fontSize: 12 }}>☁️ {t('drive.title')}</span>
+          <span style={{ fontSize: 13, color: driveEnabled ? 'var(--calm)' : 'var(--text-faint)' }}>
+            {driveEnabled ? '✅ ' + t('drive.statusOn') : '○ ' + t('drive.statusOff')}
+          </span>
+        </div>
         <p className="muted" style={{ fontSize: 13, margin: '0 0 12px' }}>{t('drive.desc')}</p>
         <Button onClick={doSync} disabled={syncState === 'syncing'}>
           {syncState === 'syncing'

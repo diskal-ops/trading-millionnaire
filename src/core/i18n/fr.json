@@ -108,5 +108,7 @@
   "drive.syncNow": "Synchroniser maintenant",
   "drive.syncing": "Synchro en cours…",
   "drive.synced": "Dernière synchro",
-  "drive.error": "Échec de la synchro"
+  "drive.error": "Échec de la synchro",
+  "drive.statusOn": "Connecté",
+  "drive.statusOff": "Non connecté"
 }
