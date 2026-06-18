@@ -1,0 +1,5 @@
+project_id = "kijun"
+
+[functions.gemini-proxy]
+# verify_jwt = true par défaut : seul un utilisateur authentifié peut appeler le proxy.
+verify_jwt = true

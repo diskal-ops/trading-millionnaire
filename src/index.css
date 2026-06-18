@@ -1,0 +1,94 @@
+/* ===========================================================
+   KIJUN — design system
+   Esthétique : faire BAISSER l'arousal, pas l'augmenter.
+   =========================================================== */
+:root {
+  /* Fond ink sombre */
+  --ink-900: #0E0F13;
+  --ink-800: #14161C;
+  --ink-700: #1B1E26;
+  --ink-600: #262A35;
+  --line: #2E333F;
+
+  --text: #E7E9EE;
+  --text-dim: #9AA0AE;
+  --text-faint: #646B7A;
+
+  /* Accent or "Kijun" */
+  --gold: #E8B84B;
+  --gold-dim: #B89238;
+
+  /* Corail doux — alertes jamais agressives */
+  --coral: #E8907A;
+  --coral-soft: #C9745F;
+
+  /* Vert calme — signal vert / validation */
+  --calm: #7FB8A4;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+
+  --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", ui-monospace, monospace;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  min-height: 100%;
+  background: var(--ink-900);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  /* léger dégradé vertical pour la profondeur, sans agitation */
+  background:
+    radial-gradient(1200px 600px at 50% -10%, #161922 0%, var(--ink-900) 60%);
+}
+
+/* Chiffres = terminal */
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+/* Affirmations = humain */
+.serif { font-family: var(--font-serif); font-style: italic; }
+
+h1, h2, h3 { font-weight: 600; letter-spacing: -0.01em; }
+
+a { color: var(--gold); text-decoration: none; }
+
+button { font-family: inherit; }
+
+/* Focus clavier visible */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Respecter prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.app-shell {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 16px calc(96px + env(safe-area-inset-bottom));
+  min-height: 100vh;
+}
+
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.row { display: flex; align-items: center; gap: 12px; }
+.spread { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.muted { color: var(--text-dim); }
+.faint { color: var(--text-faint); }
+.center { text-align: center; }
