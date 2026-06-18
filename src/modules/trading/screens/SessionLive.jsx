@@ -10,16 +10,15 @@ import { classifySignal, detectCoupDePression, coupToPattern } from '../detect.j
 import { LOT_WARNING } from '../data.js'
 
 const COACH_SYSTEM =
-  "Tu es KIJUN, coach de trading d'Ernesto (stratégie Millionnaire, GER40/Nasdaq). " +
-  "Réponds en UNE ou DEUX phrases courtes, calmes, à la 2e personne. Fais BAISSER la tension. " +
-  "Rappelle : le retest est normal, le SL est le seul juge, lire sur M5, ne pas sortir par soulagement. " +
+  "Tu es KIJUN, le coach de trading d'Ernesto (stratégie Millionnaire, GER40/Nasdaq). " +
+  "Tu DIALOGUES avec lui : il te parle, tu lui réponds en UNE ou DEUX phrases courtes, calmes, à la 2e personne (tutoie). " +
+  "Fais BAISSER la tension. Rappelle au besoin : le retest est normal, le SL est le seul juge, lire sur M5, ne pas sortir par soulagement. " +
   "Jamais de conseil financier chiffré, jamais d'incitation à pousser.";
 
 export default function SessionLive() {
   const { t, lang } = useI18n()
   const nav = useNavigate()
   const { saveSession, addPattern, balance } = useAppStore()
-  // État de session PERSISTANT (reste à travers la navigation)
   const state = useAppStore((s) => s.sessionState)
   const setState = useAppStore((s) => s.setSessionState)
   const voiceOn = useAppStore((s) => s.voiceOn)
@@ -28,10 +27,11 @@ export default function SessionLive() {
   const [transcript, setTranscript] = useState([])
   const [coachMsgs, setCoachMsgs] = useState([])
   const [lastCoup, setLastCoup] = useState(null)
-  const transcriptRef = useRef(null)
+  const [turnText, setTurnText] = useState('') // message en cours de dictée
+  const [thinking, setThinking] = useState(false)
   const speakRef = useRef(null)
 
-  // Calcul du lot (avant de valider le setup)
+  // Calcul du lot (carte en bas)
   const [mise, setMise] = useState(Math.round(balance * 0.1))
   const [dist, setDist] = useState(35)
   const lot = dist ? Number(mise) / Number(dist) : 0
@@ -51,50 +51,55 @@ export default function SessionLive() {
     [pushCoach, setState],
   )
 
-  const handleSegment = useCallback(
-    async (text) => {
-      if (!text) return
-      const signal = classifySignal(text)
-      setTranscript((tr) => [...tr, { text, signal }])
-
-      const trans = voiceTransition(state, text)
-      if (trans) enterState(trans)
-
-      const coup = detectCoupDePression(text)
-      if (coup) {
-        setLastCoup(coup)
-        const pat = coupToPattern(coup.id)
-        if (pat) addPattern(pat)
-      }
-
-      if (state === STATES.GESTION || state === STATES.POSITION_PRISE) {
-        if (coup) {
-          pushCoach(coup.rappel)
-        } else if (signal === 'rouge') {
-          const reply = await coachReply({
-            system: COACH_SYSTEM,
-            user: text,
-            context: { etat: state, coupDePression: lastCoup },
-          })
-          pushCoach(reply)
-        }
-      }
-    },
-    [state, enterState, addPattern, pushCoach, lastCoup],
-  )
+  // Pendant la dictée : on accumule le message (aucune réponse encore)
+  const handleSegment = useCallback((text) => {
+    if (!text) return
+    const signal = classifySignal(text)
+    setTranscript((tr) => [...tr, { text, signal }])
+    setTurnText((prev) => (prev ? prev + ' ' + text : text).trim())
+  }, [])
 
   const speech = useSpeech({ lang, onFinalSegment: handleSegment, voiceOn })
   speakRef.current = speech.speak
 
-  // Message d'accueil pour l'état COURANT (reprise de session incluse)
+  // ENVOYER : on traite le message et le coach répond (comme un chat)
+  const sendTurn = useCallback(async () => {
+    const msg = (turnText + ' ' + (speech.interim || '')).trim()
+    speech.stop()
+    if (!msg) return
+    setTurnText('')
+
+    const coup = detectCoupDePression(msg)
+    if (coup) {
+      setLastCoup(coup)
+      const pat = coupToPattern(coup.id)
+      if (pat) addPattern(pat)
+    }
+
+    // Si la phrase fait changer d'état (« j'ai pris le trade »), le message d'état sert de réponse.
+    const trans = voiceTransition(state, msg)
+    if (trans) {
+      enterState(trans)
+      return
+    }
+
+    setThinking(true)
+    try {
+      const reply = await coachReply({
+        system: COACH_SYSTEM,
+        user: msg,
+        context: { etat: state, coupDePression: coup ? { declencheur: coup.declencheur, rappel: coup.rappel } : null },
+      })
+      pushCoach(reply)
+    } finally {
+      setThinking(false)
+    }
+  }, [turnText, speech, state, enterState, addPattern, pushCoach])
+
   useEffect(() => {
     pushCoach(STATE_MESSAGES[state] || STATE_MESSAGES[STATES.ATTENTE_SETUP])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-  useEffect(() => {
-    transcriptRef.current?.scrollTo({ top: 1e9, behavior: 'smooth' })
-  }, [transcript])
 
   const finish = () => {
     speech.stop()
@@ -104,99 +109,71 @@ export default function SessionLive() {
       patterns: [...new Set(transcript.filter((x) => x.signal === 'rouge').map(() => 'rouge'))],
       coach: coachMsgs.map((m) => m.text),
     })
-    setState(STATES.ATTENTE_SETUP) // prêt pour la prochaine session
-    nav('/evening') // → mettre à jour le solde + ressenti
+    setState(STATES.ATTENTE_SETUP)
+    nav('/evening')
   }
+
+  const startTalk = () => { setTurnText(''); speech.start() }
+  const liveMsg = (turnText + ' ' + (speech.interim || '')).trim()
 
   return (
     <div className="stack">
       <div className="spread">
         <div>
           <div className="faint" style={{ fontSize: 12 }}>{t('nav.session')}</div>
-          <div className="mono" style={{ fontSize: 18, color: 'var(--gold)' }}>
-            {t(`session.state.${state}`)}
-          </div>
+          <div className="mono" style={{ fontSize: 18, color: 'var(--gold)' }}>{t(`session.state.${state}`)}</div>
         </div>
         <VoiceToggle on={voiceOn} onToggle={() => setVoiceOn(!voiceOn)} />
       </div>
 
-      {/* Coach */}
+      {/* Coach (conversation) */}
       <Card tone={lastCoup ? 'alert' : undefined}>
         <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>{t('session.coach')}</div>
         <div className="stack" style={{ gap: 10 }}>
           {coachMsgs.slice(-3).map((m, i) => (
-            <p key={i} className="serif" style={{ margin: 0, fontSize: 17, lineHeight: 1.45 }}>
-              {m.text}
-            </p>
+            <p key={i} className="serif" style={{ margin: 0, fontSize: 17, lineHeight: 1.45 }}>{m.text}</p>
           ))}
+          {thinking && <p className="faint" style={{ margin: 0, fontSize: 15 }}>…</p>}
         </div>
         {state === STATES.POSITION_PRISE && (
-          <p className="muted" style={{ fontSize: 13, marginTop: 12, borderTop: '1px solid var(--line)', paddingTop: 10 }}>
-            {LOT_WARNING}
-          </p>
+          <p className="muted" style={{ fontSize: 13, marginTop: 12, borderTop: '1px solid var(--line)', paddingTop: 10 }}>{LOT_WARNING}</p>
         )}
       </Card>
 
-      {/* Dictaphone */}
+      {/* Parler → écrire → envoyer */}
       <Card>
         <div className="spread" style={{ marginBottom: 10 }}>
-          <span className="faint" style={{ fontSize: 12 }}>{t('session.transcript')}</span>
+          <span className="faint" style={{ fontSize: 12 }}>{t('session.yourMessage')}</span>
           <span className="mono" style={{ fontSize: 12, color: speech.listening ? 'var(--calm)' : 'var(--text-faint)' }}>
             {speech.listening ? '● ' + t('voice.listening') : t('voice.stopped')}
           </span>
         </div>
 
         {!speech.supported && (
-          <p className="muted" style={{ fontSize: 13 }}>
-            La reconnaissance vocale n'est pas supportée par ce navigateur (essaie Chrome/Edge).
-          </p>
+          <p className="muted" style={{ fontSize: 13 }}>Reconnaissance vocale non supportée (essaie Chrome/Edge).</p>
         )}
 
-        <div ref={transcriptRef} style={{ maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {transcript.map((x, i) => (
-            <span key={i} style={{ fontSize: 14, color: x.signal === 'rouge' ? 'var(--coral)' : x.signal === 'vert' ? 'var(--calm)' : 'var(--text-dim)' }}>
-              {x.text}
-            </span>
-          ))}
-          {speech.interim && <span className="faint" style={{ fontSize: 14, fontStyle: 'italic' }}>{speech.interim}…</span>}
+        <div style={{ minHeight: 48, background: 'var(--ink-700)', border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: '12px 14px', fontSize: 15 }}>
+          {liveMsg || <span className="faint" style={{ fontStyle: 'italic' }}>{t('voice.talkHint')}</span>}
         </div>
 
-        <div className="row" style={{ marginTop: 14, gap: 10 }}>
+        <div className="row" style={{ marginTop: 12, gap: 10 }}>
           {speech.listening ? (
-            <Button variant="ghost" onClick={speech.stop}>● {t('voice.listening')} — stop</Button>
+            <Button onClick={sendTurn}>➤ {t('voice.send')}</Button>
           ) : (
-            <Button variant="calm" onClick={speech.start} disabled={!speech.supported}>🎙 {t('voice.talk')}</Button>
+            <Button variant="calm" onClick={startTalk} disabled={!speech.supported}>🎙 {t('voice.talk')}</Button>
+          )}
+          {!speech.listening && liveMsg && (
+            <Button variant="ghost" onClick={sendTurn}>➤ {t('voice.send')}</Button>
           )}
         </div>
-        <p className="faint" style={{ fontSize: 11, marginTop: 8 }}>{t('voice.talkHint')}</p>
       </Card>
 
       {/* Contrôles d'état */}
       <Card>
-        <div className="stack" style={{ gap: 12 }}>
+        <div className="stack" style={{ gap: 10 }}>
           {state === STATES.ATTENTE_SETUP && (
-            <>
-              {/* 1) On calcule le lot AVANT de prendre */}
-              <div style={{ borderBottom: '1px solid var(--line)', paddingBottom: 14 }}>
-                <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>🎯 {t('lot.title')}</div>
-                <div className="row" style={{ gap: 12, alignItems: 'flex-end' }}>
-                  <Field label={`${t('lot.mise')} (€)`}>
-                    <Input type="number" inputMode="decimal" value={mise} onChange={(e) => setMise(e.target.value)} />
-                  </Field>
-                  <Field label={t('lot.distance')}>
-                    <Input type="number" inputMode="decimal" value={dist} onChange={(e) => setDist(e.target.value)} />
-                  </Field>
-                  <div style={{ textAlign: 'center', minWidth: 64 }}>
-                    <div className="faint" style={{ fontSize: 11 }}>{t('lot.lot')}</div>
-                    <div className="mono" style={{ fontSize: 26, color: lot >= 2 ? 'var(--coral)' : 'var(--gold)' }}>
-                      {lot ? lot.toFixed(2) : '—'}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* 2) Puis on valide le setup */}
-              <Button onClick={() => enterState(STATES.SETUP_CONFIRME)}>{t('session.confirmSetup')}</Button>
-            </>
+            <Button onClick={() => enterState(STATES.SETUP_CONFIRME)}>{t('session.confirmSetup')}</Button>
           )}
           {state === STATES.SETUP_CONFIRME && (
             <Button onClick={() => enterState(STATES.POSITION_PRISE)}>{t('session.took')}</Button>
@@ -207,6 +184,23 @@ export default function SessionLive() {
           {state === STATES.GESTION && (
             <Button variant="alert" onClick={finish}>{t('session.closeDay')}</Button>
           )}
+        </div>
+      </Card>
+
+      {/* Calcul du lot — en bas, fait partie de la session */}
+      <Card>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>🎯 {t('lot.title')}</div>
+        <div className="row" style={{ gap: 12, alignItems: 'flex-end' }}>
+          <Field label={`${t('lot.mise')} (€)`}>
+            <Input type="number" inputMode="decimal" value={mise} onChange={(e) => setMise(e.target.value)} />
+          </Field>
+          <Field label={t('lot.distance')}>
+            <Input type="number" inputMode="decimal" value={dist} onChange={(e) => setDist(e.target.value)} />
+          </Field>
+          <div style={{ textAlign: 'center', minWidth: 64 }}>
+            <div className="faint" style={{ fontSize: 11 }}>{t('lot.lot')}</div>
+            <div className="mono" style={{ fontSize: 26, color: lot >= 2 ? 'var(--coral)' : 'var(--gold)' }}>{lot ? lot.toFixed(2) : '—'}</div>
+          </div>
         </div>
       </Card>
     </div>
