@@ -22,7 +22,18 @@ export function useSpeech({ lang = 'fr', onFinalSegment } = {}) {
 
   const [listening, setListening] = useState(false)
   const [interim, setInterim] = useState('')
-  const [voiceOn, setVoiceOn] = useState(true)
+  const [voiceOn, setVoiceOnState] = useState(true)
+
+  // Couper la voix doit ARRÊTER la lecture en cours immédiatement.
+  const setVoiceOn = useCallback((updater) => {
+    setVoiceOnState((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      if (!next && typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel()
+      }
+      return next
+    })
+  }, [])
 
   useEffect(() => {
     if (!supported) return

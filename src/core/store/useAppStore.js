@@ -23,6 +23,10 @@ export const useAppStore = create(
       setDriveEnabled: (v) => set({ driveEnabled: Boolean(v) }),
       setLastSync: (t) => set({ lastSync: t }),
 
+      // --- État de la session de trading (persiste à travers la navigation) ---
+      sessionState: 'ATTENTE_SETUP',
+      setSessionState: (s) => set({ sessionState: s }),
+
       // --- Escalier / argent ---
       balance: 480, // valeur réelle actuelle (Ernesto)
       previousHigh: 820, // ancien plus-haut (thermostat, rouge)

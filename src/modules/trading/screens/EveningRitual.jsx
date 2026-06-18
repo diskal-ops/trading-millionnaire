@@ -15,6 +15,7 @@ export default function EveningRitual() {
   const [saved, setSaved] = useState(false)
   const [succ, setSucc] = useState(['', '', ''])
   const [succSaved, setSuccSaved] = useState(false)
+  const [gratitude, setGratitude] = useState(['', '', ''])
 
   const marche = marcheDepuisBalance(Number(bal))
   const next = prochainPalier(marche)
@@ -26,6 +27,7 @@ export default function EveningRitual() {
       trading_resultat: result,
       nutrition_ok: nutrition,
       etat_mental: feeling || 'soir',
+      gratitude_soir: gratitude.filter((g) => g.trim()),
     })
     setSaved(true)
   }
@@ -87,6 +89,21 @@ export default function EveningRitual() {
           <Field label={t('ritual.feeling')}>
             <Input value={feeling} onChange={(e) => setFeeling(e.target.value)} placeholder="…" />
           </Field>
+        </div>
+      </Card>
+
+      {/* Gratitude du soir — 3 belles choses avant de dormir */}
+      <Card tone="calm">
+        <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>🙏 {t('ritual.gratitudeEvening')}</div>
+        <div className="stack" style={{ gap: 8 }}>
+          {[0, 1, 2].map((i) => (
+            <Input
+              key={i}
+              value={gratitude[i]}
+              onChange={(e) => setGratitude((g) => g.map((x, j) => (j === i ? e.target.value : x)))}
+              placeholder={`${i + 1}.`}
+            />
+          ))}
         </div>
       </Card>
 

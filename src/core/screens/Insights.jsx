@@ -3,7 +3,7 @@ import { useI18n } from '../i18n/index.jsx'
 import { useAppStore } from '../store/useAppStore.js'
 import { runCorrelations } from '../correlationEngine.js'
 import { syncNow } from '../driveSync.js'
-import { Card, Button } from '../../ui/index.jsx'
+import { Card, Button, LangToggle } from '../../ui/index.jsx'
 
 const TONE = { fragile: 'alert', warn: undefined, info: 'calm' }
 
@@ -114,6 +114,12 @@ export default function Insights() {
           </div>
         )}
       </Card>
+
+      {/* Langue (tout en bas) */}
+      <div className="spread" style={{ paddingTop: 4 }}>
+        <span className="faint" style={{ fontSize: 12 }}>Langue · Language</span>
+        <LangToggle />
+      </div>
     </div>
   )
 }

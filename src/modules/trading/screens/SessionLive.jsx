@@ -4,8 +4,8 @@ import { useI18n } from '../../../core/i18n/index.jsx'
 import { useSpeech } from '../../../core/hooks/useSpeech.js'
 import { useAppStore } from '../../../core/store/useAppStore.js'
 import { coachReply } from '../../../core/gemini.js'
-import { Card, Button, VoiceToggle } from '../../../ui/index.jsx'
-import { STATES, STATE_MESSAGES, nextState, voiceTransition } from '../stateMachine.js'
+import { Card, Button, VoiceToggle, Field, Input } from '../../../ui/index.jsx'
+import { STATES, STATE_MESSAGES, voiceTransition } from '../stateMachine.js'
 import { classifySignal, detectCoupDePression, coupToPattern } from '../detect.js'
 import { LOT_WARNING } from '../data.js'
 
@@ -18,15 +18,21 @@ const COACH_SYSTEM =
 export default function SessionLive() {
   const { t, lang } = useI18n()
   const nav = useNavigate()
-  const { saveSession, addPattern } = useAppStore()
+  const { saveSession, addPattern, balance } = useAppStore()
+  // État de session PERSISTANT (reste à travers la navigation)
+  const state = useAppStore((s) => s.sessionState)
+  const setState = useAppStore((s) => s.setSessionState)
 
-  const [state, setState] = useState(STATES.ATTENTE_SETUP)
-  const [transcript, setTranscript] = useState([]) // {text, signal}
+  const [transcript, setTranscript] = useState([])
   const [coachMsgs, setCoachMsgs] = useState([])
   const [lastCoup, setLastCoup] = useState(null)
   const transcriptRef = useRef(null)
-
   const speakRef = useRef(null)
+
+  // Calcul du lot (avant de valider le setup)
+  const [mise, setMise] = useState(Math.round(balance * 0.1))
+  const [dist, setDist] = useState(35)
+  const lot = dist ? Number(mise) / Number(dist) : 0
 
   const pushCoach = useCallback((text) => {
     if (!text) return
@@ -34,28 +40,24 @@ export default function SessionLive() {
     speakRef.current?.(text)
   }, [])
 
-  // À l'entrée d'un état : message + lecture vocale
   const enterState = useCallback(
     (s) => {
       setState(s)
       const msg = STATE_MESSAGES[s]
       if (msg) pushCoach(msg)
     },
-    [pushCoach],
+    [pushCoach, setState],
   )
 
-  // Traitement d'un segment final de transcription
   const handleSegment = useCallback(
     async (text) => {
       if (!text) return
       const signal = classifySignal(text)
       setTranscript((tr) => [...tr, { text, signal }])
 
-      // transition d'état par la voix
       const trans = voiceTransition(state, text)
       if (trans) enterState(trans)
 
-      // coup de pression ?
       const coup = detectCoupDePression(text)
       if (coup) {
         setLastCoup(coup)
@@ -63,10 +65,9 @@ export default function SessionLive() {
         if (pat) addPattern(pat)
       }
 
-      // En GESTION ou POSITION_PRISE, recadrage live
       if (state === STATES.GESTION || state === STATES.POSITION_PRISE) {
         if (coup) {
-          pushCoach(coup.rappel) // recadrage immédiat, déterministe
+          pushCoach(coup.rappel)
         } else if (signal === 'rouge') {
           const reply = await coachReply({
             system: COACH_SYSTEM,
@@ -83,28 +84,26 @@ export default function SessionLive() {
   const speech = useSpeech({ lang, onFinalSegment: handleSegment })
   speakRef.current = speech.speak
 
-  // message initial
+  // Message d'accueil pour l'état COURANT (reprise de session incluse)
   useEffect(() => {
-    pushCoach(STATE_MESSAGES[STATES.ATTENTE_SETUP])
+    pushCoach(STATE_MESSAGES[state] || STATE_MESSAGES[STATES.ATTENTE_SETUP])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // autoscroll transcript
   useEffect(() => {
     transcriptRef.current?.scrollTo({ top: 1e9, behavior: 'smooth' })
   }, [transcript])
 
-  const advance = () => enterState(nextState(state))
-
   const finish = () => {
     speech.stop()
     saveSession({
-      state_final: state,
+      state_final: STATES.CLOTURE,
       transcript: transcript.map((x) => x.text).join(' '),
       patterns: [...new Set(transcript.filter((x) => x.signal === 'rouge').map(() => 'rouge'))],
       coach: coachMsgs.map((m) => m.text),
     })
-    enterState(STATES.CLOTURE)
+    setState(STATES.ATTENTE_SETUP) // prêt pour la prochaine session
+    nav('/evening') // → mettre à jour le solde + ressenti
   }
 
   return (
@@ -151,19 +150,9 @@ export default function SessionLive() {
           </p>
         )}
 
-        <div
-          ref={transcriptRef}
-          style={{ maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}
-        >
+        <div ref={transcriptRef} style={{ maxHeight: 180, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
           {transcript.map((x, i) => (
-            <span
-              key={i}
-              style={{
-                fontSize: 14,
-                color:
-                  x.signal === 'rouge' ? 'var(--coral)' : x.signal === 'vert' ? 'var(--calm)' : 'var(--text-dim)',
-              }}
-            >
+            <span key={i} style={{ fontSize: 14, color: x.signal === 'rouge' ? 'var(--coral)' : x.signal === 'vert' ? 'var(--calm)' : 'var(--text-dim)' }}>
               {x.text}
             </span>
           ))}
@@ -181,11 +170,32 @@ export default function SessionLive() {
 
       {/* Contrôles d'état */}
       <Card>
-        <div className="stack" style={{ gap: 10 }}>
+        <div className="stack" style={{ gap: 12 }}>
           {state === STATES.ATTENTE_SETUP && (
-            <Button onClick={() => enterState(STATES.SETUP_CONFIRME)}>{t('session.confirmSetup')}</Button>
+            <>
+              {/* 1) On calcule le lot AVANT de prendre */}
+              <div style={{ borderBottom: '1px solid var(--line)', paddingBottom: 14 }}>
+                <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>🎯 {t('lot.title')}</div>
+                <div className="row" style={{ gap: 12, alignItems: 'flex-end' }}>
+                  <Field label={`${t('lot.mise')} (€)`}>
+                    <Input type="number" inputMode="decimal" value={mise} onChange={(e) => setMise(e.target.value)} />
+                  </Field>
+                  <Field label={t('lot.distance')}>
+                    <Input type="number" inputMode="decimal" value={dist} onChange={(e) => setDist(e.target.value)} />
+                  </Field>
+                  <div style={{ textAlign: 'center', minWidth: 64 }}>
+                    <div className="faint" style={{ fontSize: 11 }}>{t('lot.lot')}</div>
+                    <div className="mono" style={{ fontSize: 26, color: lot >= 2 ? 'var(--coral)' : 'var(--gold)' }}>
+                      {lot ? lot.toFixed(2) : '—'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* 2) Puis on valide le setup */}
+              <Button onClick={() => enterState(STATES.SETUP_CONFIRME)}>{t('session.confirmSetup')}</Button>
+            </>
           )}
-          {(state === STATES.SETUP_CONFIRME) && (
+          {state === STATES.SETUP_CONFIRME && (
             <Button onClick={() => enterState(STATES.POSITION_PRISE)}>{t('session.took')}</Button>
           )}
           {state === STATES.POSITION_PRISE && (
@@ -193,26 +203,6 @@ export default function SessionLive() {
           )}
           {state === STATES.GESTION && (
             <Button variant="alert" onClick={finish}>{t('session.closeDay')}</Button>
-          )}
-          {state === STATES.CLOTURE && (
-            <div className="stack" style={{ gap: 12 }}>
-              <p className="serif center" style={{ fontSize: 18 }}>
-                {STATE_MESSAGES[STATES.CLOTURE]}
-              </p>
-              {lastCoup && (
-                <Button
-                  variant="ghost"
-                  onClick={() => nav('/mhh', { state: { pattern: coupToPattern(lastCoup.id) } })}
-                >
-                  🧭 {t('mhh.fromSession')}
-                </Button>
-              )}
-            </div>
-          )}
-          {state !== STATES.CLOTURE && state !== STATES.GESTION && (
-            <button onClick={advance} style={{ background: 'none', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 12 }}>
-              {t('common.next')} →
-            </button>
           )}
         </div>
       </Card>

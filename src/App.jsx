@@ -7,7 +7,6 @@ import { useAppStore } from './core/store/useAppStore.js'
 import { cloudData } from './core/supabaseClient.js'
 import { syncNow } from './core/driveSync.js'
 import { preload as preloadDrive } from './core/drive.js'
-import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
 import Discipline from './core/screens/Discipline.jsx'
@@ -53,7 +52,6 @@ export default function App() {
           <span style={{ fontWeight: 700, letterSpacing: '0.18em' }}>{t('app.name')}</span>
           <span className="faint" style={{ fontSize: 12 }}>{t('app.tagline')}</span>
         </div>
-        <LangToggle />
       </header>
 
       <main style={{ paddingTop: 8 }}>

@@ -126,7 +126,7 @@ export function prochainPalier(marche) {
 export const RITUEL_MATIN = {
   croyance: "Le trading est simple, je n'ai rien à maîtriser, je dois juste attendre.",
   identite:
-    "Je ne suis pas quelqu'un qui gagne, je suis un observateur discipliné. Je crée ma réalité et ce ne sont que des chiffres. Je me dissocie de la personne que je suis.",
+    "Je gagne en respectant mon setup. La discipline et la constance sont les clés de mon succès. J'ai foi en mon trading et en Dieu qui m'a donné ce talent.",
 }
 
 // --- Affirmations / ancrages ---
