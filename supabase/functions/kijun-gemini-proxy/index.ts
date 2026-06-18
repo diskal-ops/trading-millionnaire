@@ -17,7 +17,8 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
 
 const GEMINI_KEY = Deno.env.get('GEMINI_KEY')
-const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-1.5-flash'
+// Modèle le plus économique (palier gratuit AI Studio).
+const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-2.5-flash-lite'
 const ENDPOINT = (model: string) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
 
@@ -41,7 +42,12 @@ serve(async (req) => {
     const body = {
       systemInstruction: system ? { parts: [{ text: String(system).slice(0, 2000) }] } : undefined,
       contents: [{ role: 'user', parts: [{ text: userText + ctx }] }],
-      generationConfig: { temperature: 0.6, maxOutputTokens: 120 },
+      generationConfig: {
+        temperature: 0.6,
+        maxOutputTokens: 150, // réponses courtes = coût minimal
+        // on coupe le "thinking" : moins de tokens, réponse complète.
+        thinkingConfig: { thinkingBudget: 0 },
+      },
     }
 
     const res = await fetch(`${ENDPOINT(MODEL)}?key=${GEMINI_KEY}`, {
@@ -50,8 +56,9 @@ serve(async (req) => {
       body: JSON.stringify(body),
     })
     if (!res.ok) {
-      console.error('[kijun-gemini-proxy] upstream', res.status, await res.text())
-      return json({ error: 'gemini upstream error', status: res.status }, 502)
+      const detail = await res.text()
+      console.error('[kijun-gemini-proxy] upstream', res.status, detail)
+      return json({ error: 'gemini upstream error', status: res.status, detail: detail.slice(0, 600), model: MODEL }, 502)
     }
     const data = await res.json()
     const text =

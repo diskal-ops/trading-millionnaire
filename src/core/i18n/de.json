@@ -88,5 +88,18 @@
   "backup.desc": "Deine Daten liegen auf diesem PC. Exportiere eine Datei, um nie etwas zu verlieren.",
   "backup.export": "Exportieren",
   "backup.import": "Importieren",
-  "backup.imported": "Sicherung importiert."
+  "backup.imported": "Sicherung importiert.",
+  "home.objToday": "Tagesziel",
+  "home.fromNow": "ab",
+  "home.manifest": "Was du manifestierst",
+  "escalier.marches": "Nächste Stufen",
+  "escalier.paliers": "Meilensteine (Käufe)",
+  "lot.title": "Lot-Berechnung",
+  "lot.subtitle": "Einsatz ÷ Distanz = Lot. Ungefähr, sofort ablesbar.",
+  "lot.mise": "Einsatz",
+  "lot.distance": "Distanz (Punkte)",
+  "lot.lot": "Lot",
+  "lot.default10": "Standard-Einsatz (10% des Kontostands)",
+  "lot.grid": "Raster — Lot = Einsatz ÷ Distanz",
+  "lot.lotWarn": "Lot bei 2: Zahlen bewegen sich schneller → mehr Stress. Lies die Struktur, nicht das Geld."
 }

@@ -169,3 +169,16 @@ export const SUCCESS_QUESTIONS = [
   "Qu'est-ce qui le rendait difficile à atteindre ?",
   'Comment as-tu réussi — quels efforts, et qu\'as-tu appris ?',
 ]
+
+// --- Balance cible pour une marche donnée (jour n) ---
+export function balancePourMarche(n, depart = ESCALIER.balanceDepart) {
+  return depart * Math.pow(1 + ESCALIER.croissanceJour, n)
+}
+
+// ===========================================================
+// CALCUL DU LOT (le tableau d'Ernesto, approximatif, lecture instantanée)
+// lot = mise (€) / distance (points). Ex. : 70 € / 35 pts → lot 2.0
+// Pas de détail broker : c'est volontairement simple.
+// ===========================================================
+export const LOT_DISTANCES = [10, 15, 20, 25, 30, 40, 50, 70] // points
+export const LOT_MISES = [20, 40, 60, 80, 120] // €

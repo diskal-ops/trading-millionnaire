@@ -88,5 +88,18 @@
   "backup.desc": "Your data lives on this PC. Export a file so you never lose anything.",
   "backup.export": "Export",
   "backup.import": "Import",
-  "backup.imported": "Backup imported."
+  "backup.imported": "Backup imported.",
+  "home.objToday": "Today's objective",
+  "home.fromNow": "from",
+  "home.manifest": "What you're manifesting",
+  "escalier.marches": "Next steps",
+  "escalier.paliers": "Milestones (purchases)",
+  "lot.title": "Lot size",
+  "lot.subtitle": "Stake ÷ distance = lot. Approximate, instant read.",
+  "lot.mise": "Stake",
+  "lot.distance": "Distance (points)",
+  "lot.lot": "Lot",
+  "lot.default10": "Default stake (10% of balance)",
+  "lot.grid": "Grid — lot = stake ÷ distance",
+  "lot.lotWarn": "Lot at 2: numbers move faster → more stress. Read structure, not money."
 }

@@ -12,7 +12,7 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts'
 
 const GEMINI_KEY = Deno.env.get('GEMINI_KEY')
-const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-1.5-flash'
+const MODEL = Deno.env.get('GEMINI_MODEL') ?? 'gemini-2.5-flash-lite'
 const ENDPOINT = (model: string) =>
   `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`
 

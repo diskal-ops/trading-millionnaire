@@ -2,7 +2,7 @@ import React from 'react'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useAppStore } from '../../../core/store/useAppStore.js'
 import { Card, Stat } from '../../../ui/index.jsx'
-import { ESCALIER, marcheDepuisBalance, prochainPalier } from '../data.js'
+import { ESCALIER, marcheDepuisBalance, prochainPalier, balancePourMarche } from '../data.js'
 
 export default function Escalier() {
   const { t } = useI18n()
@@ -28,7 +28,30 @@ export default function Escalier() {
         </div>
       </Card>
 
+      {/* Les prochaines marches, avec balance cible */}
       <Card>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>{t('escalier.marches')}</div>
+        <div className="stack" style={{ gap: 0 }}>
+          {Array.from({ length: 10 }, (_, i) => marche + i).map((n) => {
+            const pal = ESCALIER.paliers.find((p) => p.marche === n)
+            const isCurrent = n === marche
+            return (
+              <div key={n} className="spread" style={{ padding: '7px 0', borderBottom: '1px solid var(--ink-700)' }}>
+                <div className="row" style={{ gap: 12 }}>
+                  <span className="mono" style={{ width: 40, color: isCurrent ? 'var(--gold)' : 'var(--text-faint)' }}>m{n}</span>
+                  <span className="mono" style={{ color: isCurrent ? 'var(--gold)' : 'var(--text)' }}>
+                    {Math.round(balancePourMarche(n)).toLocaleString()} €
+                  </span>
+                </div>
+                {pal && <span className="serif" style={{ fontSize: 13, color: 'var(--calm)' }}>{pal.label}</span>}
+              </div>
+            )
+          })}
+        </div>
+      </Card>
+
+      <Card>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>{t('escalier.paliers')}</div>
         <ol style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {ESCALIER.paliers.map((p) => {
             const done = marche >= p.marche

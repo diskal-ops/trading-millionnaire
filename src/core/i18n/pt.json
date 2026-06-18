@@ -88,5 +88,18 @@
   "backup.desc": "Os teus dados vivem neste PC. Exporta um ficheiro para nunca perderes nada.",
   "backup.export": "Exportar",
   "backup.import": "Importar",
-  "backup.imported": "Cópia importada."
+  "backup.imported": "Cópia importada.",
+  "home.objToday": "Objetivo do dia",
+  "home.fromNow": "desde",
+  "home.manifest": "O que estás a manifestar",
+  "escalier.marches": "Próximos degraus",
+  "escalier.paliers": "Marcos (compras)",
+  "lot.title": "Cálculo do lote",
+  "lot.subtitle": "Aposta ÷ distância = lote. Aproximado, leitura imediata.",
+  "lot.mise": "Aposta",
+  "lot.distance": "Distância (pontos)",
+  "lot.lot": "Lote",
+  "lot.default10": "Aposta padrão (10% do saldo)",
+  "lot.grid": "Grelha — lote = aposta ÷ distância",
+  "lot.lotWarn": "Lote a 2: os números mexem mais depressa → mais stress. Lê a estrutura, não o dinheiro."
 }

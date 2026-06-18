@@ -17,17 +17,44 @@ export default function Home() {
   const insights = useMemo(() => runCorrelations(dailyLog), [dailyLog])
   const marche = marcheDepuisBalance(balance)
   const next = prochainPalier(marche)
+  const reste = Math.max(0, next.marche - marche)
+  const objGain = Math.round(balance * 0.1)
+  const cible = Math.round(balance * 1.1)
   const ancrage = ANCRAGES[new Date().getDate() % ANCRAGES.length]
 
   return (
     <div className="stack">
+      {/* Terrain + salutation (compact) */}
       <Card tone={fragile ? 'alert' : 'calm'}>
-        <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 6 }}>
           {fragile ? '⚠ ' + t('home.terrain.fragile') : '○ ' + t('home.terrain.solid')}
         </div>
         <Affirm>{t('home.greeting')}</Affirm>
       </Card>
 
+      {/* 1) Rituel du matin — en premier */}
+      <Button onClick={() => nav('/morning')}>☀️ {t('home.openMorning')}</Button>
+
+      {/* 2) Objectif du jour — le GAIN en héros, pas le solde final */}
+      <Card tone="calm">
+        <div className="faint" style={{ fontSize: 12 }}>{t('home.objToday')} (+10%)</div>
+        <div className="mono" style={{ fontSize: 44, color: 'var(--gold)', lineHeight: 1.05 }}>+{objGain} €</div>
+        <div className="mono faint" style={{ fontSize: 13, marginTop: 2 }}>
+          {balance} € → {cible} €
+        </div>
+      </Card>
+
+      {/* 3) Prochaine manifestation = le résultat */}
+      <Card>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 6 }}>🎯 {t('home.manifest')}</div>
+        <div className="serif" style={{ fontSize: 24, color: 'var(--text)' }}>{next.label}</div>
+        <div className="mono faint" style={{ fontSize: 13, marginTop: 4 }}>
+          {t('escalier.in')} {reste} {reste > 1 ? t('common.steps') : t('common.step')}
+          {next.retrait ? ` · ${next.retrait.toLocaleString()} €` : ''}
+        </div>
+      </Card>
+
+      {/* Repères secondaires */}
       <div className="spread">
         <Stat label={t('discipline.streak')} value={`🔥 ${streak}`} tone="gold" />
         <Stat label={t('escalier.current')} value={marche} unit={t('common.step')} />
@@ -48,9 +75,10 @@ export default function Home() {
         </Card>
       )}
 
+      {/* Actions de la journée */}
       <div className="stack" style={{ gap: 10 }}>
         <Button onClick={() => nav('/session')}>🎙 {t('home.openSession')}</Button>
-        <Button variant="ghost" onClick={() => nav('/morning')}>☀️ {t('home.openMorning')}</Button>
+        <Button variant="ghost" onClick={() => nav('/lot')}>🎯 {t('lot.title')}</Button>
         <Button variant="ghost" onClick={() => nav('/evening')}>🌙 {t('home.openEvening')}</Button>
       </div>
 

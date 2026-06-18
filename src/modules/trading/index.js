@@ -4,6 +4,7 @@ import MorningRitual from './screens/MorningRitual.jsx'
 import EveningRitual from './screens/EveningRitual.jsx'
 import Thermostat from './screens/Thermostat.jsx'
 import Escalier from './screens/Escalier.jsx'
+import LotCalc from './screens/LotCalc.jsx'
 
 /* ===========================================================
    MODULE TRADING — contrat d'interface
@@ -23,6 +24,7 @@ const tradingModule = {
     { path: '/morning', element: React.createElement(MorningRitual) },
     { path: '/evening', element: React.createElement(EveningRitual) },
     { path: '/thermostat', element: React.createElement(Thermostat) },
+    { path: '/lot', element: React.createElement(LotCalc) },
   ],
 
   // Forme des données persistées par le module
