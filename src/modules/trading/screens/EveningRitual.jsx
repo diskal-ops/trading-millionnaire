@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useAppStore } from '../../../core/store/useAppStore.js'
 import { Card, Button, Field, Input, Stat, Affirm } from '../../../ui/index.jsx'
@@ -6,10 +7,12 @@ import { marcheDepuisBalance, prochainPalier, SUCCESS_QUESTIONS } from '../data.
 
 export default function EveningRitual() {
   const { t } = useI18n()
+  const nav = useNavigate()
   const { balance, setBalance, upsertDailyLog, addSuccess } = useAppStore()
 
   const [bal, setBal] = useState(balance)
   const [sleepPlan, setSleepPlan] = useState('')
+  const [sport, setSport] = useState(false)
   const [nutrition, setNutrition] = useState(true)
   const [feeling, setFeeling] = useState('')
   const [saved, setSaved] = useState(false)
@@ -25,6 +28,7 @@ export default function EveningRitual() {
     setBalance(Number(bal))
     upsertDailyLog({
       trading_resultat: result,
+      sport_fait: sport,
       nutrition_ok: nutrition,
       etat_mental: feeling || 'soir',
       gratitude_soir: gratitude.filter((g) => g.trim()),
@@ -83,6 +87,10 @@ export default function EveningRitual() {
             <Input type="number" inputMode="decimal" value={sleepPlan} onChange={(e) => setSleepPlan(e.target.value)} placeholder="8" />
           </Field>
           <label className="row" style={{ gap: 10, cursor: 'pointer' }}>
+            <input type="checkbox" checked={sport} onChange={(e) => setSport(e.target.checked)} />
+            <span>{t('ritual.sport')}</span>
+          </label>
+          <label className="row" style={{ gap: 10, cursor: 'pointer' }}>
             <input type="checkbox" checked={nutrition} onChange={(e) => setNutrition(e.target.checked)} />
             <span>{t('ritual.nutrition')}</span>
           </label>
@@ -108,6 +116,11 @@ export default function EveningRitual() {
       </Card>
 
       <Button onClick={save}>{saved ? '✓ ' + t('common.saved') : t('common.save')}</Button>
+      {saved && (
+        <Button variant="calm" onClick={() => nav('/discipline')}>
+          {t('common.next')} → 🔥 {t('nav.discipline')}
+        </Button>
+      )}
     </div>
   )
 }

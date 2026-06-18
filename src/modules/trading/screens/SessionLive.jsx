@@ -22,6 +22,8 @@ export default function SessionLive() {
   // État de session PERSISTANT (reste à travers la navigation)
   const state = useAppStore((s) => s.sessionState)
   const setState = useAppStore((s) => s.setSessionState)
+  const voiceOn = useAppStore((s) => s.voiceOn)
+  const setVoiceOn = useAppStore((s) => s.setVoiceOn)
 
   const [transcript, setTranscript] = useState([])
   const [coachMsgs, setCoachMsgs] = useState([])
@@ -81,7 +83,7 @@ export default function SessionLive() {
     [state, enterState, addPattern, pushCoach, lastCoup],
   )
 
-  const speech = useSpeech({ lang, onFinalSegment: handleSegment })
+  const speech = useSpeech({ lang, onFinalSegment: handleSegment, voiceOn })
   speakRef.current = speech.speak
 
   // Message d'accueil pour l'état COURANT (reprise de session incluse)
@@ -115,7 +117,7 @@ export default function SessionLive() {
             {t(`session.state.${state}`)}
           </div>
         </div>
-        <VoiceToggle on={speech.voiceOn} onToggle={() => speech.setVoiceOn((v) => !v)} />
+        <VoiceToggle on={voiceOn} onToggle={() => setVoiceOn(!voiceOn)} />
       </div>
 
       {/* Coach */}
@@ -161,11 +163,12 @@ export default function SessionLive() {
 
         <div className="row" style={{ marginTop: 14, gap: 10 }}>
           {speech.listening ? (
-            <Button variant="ghost" onClick={speech.stop}>⏸︎ {t('voice.stopped')}</Button>
+            <Button variant="ghost" onClick={speech.stop}>● {t('voice.listening')} — stop</Button>
           ) : (
-            <Button variant="calm" onClick={speech.start} disabled={!speech.supported}>🎙 {t('voice.listen')}</Button>
+            <Button variant="calm" onClick={speech.start} disabled={!speech.supported}>🎙 {t('voice.talk')}</Button>
           )}
         </div>
+        <p className="faint" style={{ fontSize: 11, marginTop: 8 }}>{t('voice.talkHint')}</p>
       </Card>
 
       {/* Contrôles d'état */}

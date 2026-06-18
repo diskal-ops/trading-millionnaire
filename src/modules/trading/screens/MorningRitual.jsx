@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useAppStore } from '../../../core/store/useAppStore.js'
 import { Card, Button, Field, Input, Affirm, Stat } from '../../../ui/index.jsx'
@@ -6,11 +7,11 @@ import { RITUEL_MATIN, marcheDepuisBalance, prochainPalier } from '../data.js'
 
 export default function MorningRitual() {
   const { t } = useI18n()
+  const nav = useNavigate()
   const { balance, setBalance, upsertDailyLog } = useAppStore()
 
   const [bal, setBal] = useState(balance)
   const [sommeil, setSommeil] = useState('')
-  const [sport, setSport] = useState(false)
   const [g1, setG1] = useState('')
   const [g2, setG2] = useState('')
   const [g3, setG3] = useState('')
@@ -24,10 +25,12 @@ export default function MorningRitual() {
     setBalance(Number(bal))
     upsertDailyLog({
       sommeil_h: sommeil ? Number(sommeil) : null,
-      sport_fait: sport,
       etat_mental: 'matin',
+      gratitude_matin: [g1, g2, g3].filter((g) => g.trim()),
     })
     setSaved(true)
+    // Feedback puis retour à l'accueil (→ objectif du jour + ouvrir une session)
+    setTimeout(() => nav('/'), 900)
   }
 
   return (
@@ -50,15 +53,9 @@ export default function MorningRitual() {
       </Card>
 
       <Card>
-        <div className="stack">
-          <Field label={t('ritual.sleptHours')}>
-            <Input type="number" inputMode="decimal" value={sommeil} onChange={(e) => setSommeil(e.target.value)} placeholder="7" />
-          </Field>
-          <label className="row" style={{ gap: 10, cursor: 'pointer' }}>
-            <input type="checkbox" checked={sport} onChange={(e) => setSport(e.target.checked)} />
-            <span>{t('ritual.sport')}</span>
-          </label>
-        </div>
+        <Field label={t('ritual.sleptHours')}>
+          <Input type="number" inputMode="decimal" value={sommeil} onChange={(e) => setSommeil(e.target.value)} placeholder="7" />
+        </Field>
       </Card>
 
       <Card>
@@ -77,7 +74,7 @@ export default function MorningRitual() {
         </div>
       </Card>
 
-      <Button onClick={save}>{saved ? '✓ ' + t('common.saved') : t('common.save')}</Button>
+      <Button onClick={save}>{saved ? '✓ ' + t('ritual.morningDone') : t('common.save')}</Button>
     </div>
   )
 }

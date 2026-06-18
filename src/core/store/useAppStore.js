@@ -27,6 +27,14 @@ export const useAppStore = create(
       sessionState: 'ATTENTE_SETUP',
       setSessionState: (s) => set({ sessionState: s }),
 
+      // --- Voix du coach (persiste : OFF reste OFF) ---
+      voiceOn: true,
+      setVoiceOn: (v) => {
+        const next = Boolean(v)
+        if (!next && typeof window !== 'undefined' && window.speechSynthesis) window.speechSynthesis.cancel()
+        set({ voiceOn: next })
+      },
+
       // --- Escalier / argent ---
       balance: 480, // valeur réelle actuelle (Ernesto)
       previousHigh: 820, // ancien plus-haut (thermostat, rouge)
