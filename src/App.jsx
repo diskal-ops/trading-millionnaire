@@ -15,11 +15,11 @@ import MentalHandHistory from './modules/trading/screens/MentalHandHistory.jsx'
 registerAllModules()
 
 const NAV = [
-  { to: '/', key: 'nav.today', icon: '○' },
-  { to: '/session', key: 'nav.session', icon: '🎙' },
-  { to: '/discipline', key: 'nav.discipline', icon: '🔥' },
-  { to: '/escalier', key: 'nav.escalier', icon: '↗' },
-  { to: '/insights', key: 'nav.insights', icon: '◇' },
+  { to: '/', key: 'nav.today', icon: 'home' },
+  { to: '/session', key: 'nav.session', icon: 'mic' },
+  { to: '/discipline', key: 'nav.discipline', icon: 'calendar' },
+  { to: '/escalier', key: 'nav.escalier', icon: 'stairs' },
+  { to: '/insights', key: 'nav.insights', icon: 'chart' },
 ]
 
 export default function App() {
@@ -71,6 +71,27 @@ export default function App() {
   )
 }
 
+function NavIcon({ name, size = 22 }) {
+  const c = {
+    width: size, height: size, viewBox: '0 0 24 24', fill: 'none',
+    stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round',
+  }
+  switch (name) {
+    case 'home':
+      return <svg {...c}><path d="M4 12l8-7 8 7" /><path d="M6 10.5V20h12v-9.5" /></svg>
+    case 'mic':
+      return <svg {...c}><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0" /><path d="M12 18v3" /></svg>
+    case 'calendar':
+      return <svg {...c}><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 9h16M8 3v4M16 3v4" /></svg>
+    case 'stairs':
+      return <svg {...c}><path d="M3 20h5v-5h5v-5h5v-5" /></svg>
+    case 'chart':
+      return <svg {...c}><path d="M4 4v16h16" /><path d="M7 15l3-4 3 2 4-6" /></svg>
+    default:
+      return null
+  }
+}
+
 function BottomNav({ nav, t }) {
   const loc = useLocation()
   return (
@@ -82,7 +103,7 @@ function BottomNav({ nav, t }) {
         padding: '8px 0 calc(8px + env(safe-area-inset-bottom))',
       }}
     >
-      <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', justifyContent: 'space-around' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto', display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end' }}>
         {nav.map((n) => {
           const active = loc.pathname === n.to
           return (
@@ -90,13 +111,14 @@ function BottomNav({ nav, t }) {
               key={n.to}
               to={n.to}
               style={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
-                color: active ? 'var(--gold)' : 'var(--text-faint)',
-                fontSize: 11, textDecoration: 'none', padding: '4px 12px',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                color: active ? 'var(--gold)' : '#FFFFFF',
+                fontSize: 12, lineHeight: 1, textDecoration: 'none',
+                padding: '2px 8px', width: 64, textAlign: 'center',
               }}
             >
-              <span style={{ fontSize: 18 }}>{n.icon}</span>
-              {t(n.key)}
+              <span style={{ height: 24, display: 'flex', alignItems: 'center' }}><NavIcon name={n.icon} /></span>
+              <span style={{ whiteSpace: 'nowrap' }}>{t(n.key)}</span>
             </NavLink>
           )
         })}

@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../i18n/index.jsx'
 import { useAppStore } from '../store/useAppStore.js'
-import { computeStreak, bestStreak, recentDays } from '../discipline.js'
+import { computeStreak, bestStreak } from '../discipline.js'
 import { computeXP, rankFor, earnedBadges } from '../gamification.js'
 import { Card, Button, Affirm, Stat } from '../../ui/index.jsx'
 
@@ -16,7 +16,6 @@ export default function Discipline() {
 
   const streak = useMemo(() => computeStreak(discipline), [discipline])
   const best = useMemo(() => bestStreak(discipline), [discipline])
-  const days = useMemo(() => recentDays(discipline, 14), [discipline])
   const xp = useMemo(() => computeXP(state), [state])
   const { rank, next, progress } = useMemo(() => rankFor(xp), [xp])
   const badges = useMemo(() => earnedBadges(state), [state])
@@ -52,17 +51,8 @@ export default function Discipline() {
         </div>
       </Card>
 
-      {/* 14 derniers jours */}
-      <Card>
-        <div className="row" style={{ gap: 6, flexWrap: 'wrap', justifyContent: 'space-between' }}>
-          {days.map((d) => (
-            <div key={d.date} title={d.date} style={{ textAlign: 'center' }}>
-              <div style={{ width: 22, height: 22, borderRadius: 6, background: d.status === 'won' ? 'var(--gold)' : d.status === 'lost' ? 'var(--coral-soft)' : 'var(--ink-600)', border: '1px solid var(--line)' }} />
-              <span className="mono faint" style={{ fontSize: 9 }}>{d.date.slice(8)}</span>
-            </div>
-          ))}
-        </div>
-      </Card>
+      {/* Calendrier du mois (trading 5j/7) */}
+      <MonthCalendar discipline={discipline} />
 
       {/* Marquer la journée */}
       <Card tone={todayStatus === 'won' ? 'calm' : todayStatus === 'lost' ? 'alert' : undefined}>
@@ -108,5 +98,67 @@ export default function Discipline() {
 
       <Card tone="calm"><Affirm>{t('discipline.identity')}</Affirm></Card>
     </div>
+  )
+}
+
+const navBtn = { background: 'transparent', border: '1px solid var(--line)', color: 'var(--text)', borderRadius: 8, width: 30, height: 30, cursor: 'pointer', fontSize: 16 }
+
+function MonthCalendar({ discipline }) {
+  const [offset, setOffset] = useState(0)
+  const base = new Date()
+  base.setDate(1)
+  base.setMonth(base.getMonth() + offset)
+  const year = base.getFullYear()
+  const month = base.getMonth()
+  const monthName = base.toLocaleDateString(undefined, { month: 'long', year: 'numeric' })
+  const startDow = (new Date(year, month, 1).getDay() + 6) % 7 // lundi = 0
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const todayIso = new Date().toISOString().slice(0, 10)
+
+  const cells = []
+  for (let i = 0; i < startDow; i++) cells.push(null)
+  for (let d = 1; d <= daysInMonth; d++) {
+    const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+    const dow = new Date(year, month, d).getDay()
+    cells.push({ d, iso, status: discipline[iso] || null, weekend: dow === 0 || dow === 6, today: iso === todayIso })
+  }
+  const wd = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+
+  return (
+    <Card>
+      <div className="spread" style={{ marginBottom: 12 }}>
+        <button onClick={() => setOffset((o) => o - 1)} style={navBtn}>‹</button>
+        <span className="mono" style={{ fontSize: 14, textTransform: 'capitalize' }}>{monthName}</span>
+        <button onClick={() => setOffset((o) => Math.min(0, o + 1))} style={{ ...navBtn, opacity: offset >= 0 ? 0.3 : 1 }} disabled={offset >= 0}>›</button>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 6 }}>
+        {wd.map((w, i) => (
+          <div key={'h' + i} className="faint" style={{ textAlign: 'center', fontSize: 11 }}>{w}</div>
+        ))}
+        {cells.map((c, i) => {
+          if (!c) return <div key={i} />
+          const bg = c.status === 'won' ? 'var(--gold)' : c.status === 'lost' ? 'var(--coral-soft)' : 'transparent'
+          const color = c.status === 'won' ? '#1A1206' : c.weekend ? 'var(--text-faint)' : 'var(--text)'
+          return (
+            <div
+              key={i}
+              className="mono"
+              style={{
+                aspectRatio: '1', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: 8, background: bg,
+                border: c.today ? '2px solid var(--gold)' : '1px solid var(--ink-600)',
+                opacity: c.weekend && !c.status ? 0.4 : 1, fontSize: 13, color,
+              }}
+            >
+              {c.d}
+            </div>
+          )
+        })}
+      </div>
+      <div className="row" style={{ gap: 16, marginTop: 12, justifyContent: 'center' }}>
+        <span className="row" style={{ gap: 5 }}><span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--gold)' }} /><span className="faint" style={{ fontSize: 11 }}>tenu</span></span>
+        <span className="row" style={{ gap: 5 }}><span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--coral-soft)' }} /><span className="faint" style={{ fontSize: 11 }}>manqué</span></span>
+      </div>
+    </Card>
   )
 }
