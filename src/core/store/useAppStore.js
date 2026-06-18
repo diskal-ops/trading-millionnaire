@@ -31,6 +31,24 @@ export const useAppStore = create(
       markDiscipline: (won, date = todayISO()) =>
         set((s) => ({ discipline: { ...s.discipline, [date]: won ? 'won' : 'lost' } })),
 
+      // --- Mental Hand History (Tendler) ---
+      mhhEntries: [],
+      saveMHH: (entry) => {
+        const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
+        set((s) => ({ mhhEntries: [e, ...s.mhhEntries] }))
+        if (hasSupabase) get()._syncRow('mhh', e)
+        return e
+      },
+
+      // --- Journal des succès (valoriser ses accomplissements) ---
+      successJournal: [],
+      addSuccess: (entry) => {
+        const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
+        set((s) => ({ successJournal: [e, ...s.successJournal] }))
+        if (hasSupabase) get()._syncRow('success_journal', e)
+        return e
+      },
+
       // --- daily_log (cœur, transverse) ---
       dailyLog: [], // [{ date, sommeil_h, sport_fait, nutrition_ok, trading_resultat, etat_mental, patterns_detectes[] }]
 
@@ -78,6 +96,12 @@ export const useAppStore = create(
         const { data: u } = await supabase.auth.getUser()
         if (!u?.user) return
         await supabase.from('sessions').insert({ ...entry, user_id: u.user.id })
+      },
+      _syncRow: async (table, entry) => {
+        if (!supabase) return
+        const { data: u } = await supabase.auth.getUser()
+        if (!u?.user) return
+        await supabase.from(table).insert({ ...entry, user_id: u.user.id })
       },
 
       hydrateFromSupabase: async () => {

@@ -71,6 +71,9 @@ export const THERMOSTAT = {
   previousHigh: 820, // ancien plus-haut (rouge)
   alerte:
     "Tu es en territoire inconnu pour ton thermostat. C'est ICI que l'inconscient veut te ramener en arrière. Ne pousse pas. Ferme la journée. Ancre le palier en achetant ce qui est prévu.",
+  // Reformulation tirée du livre (peur = incertitude ; falaise → parcours ; montagne sous le nuage)
+  reframe:
+    "Ce n'est pas un saut dans le vide. Augmenter la mise n'est pas une décision définitive : que je gagne ou perde, le parcours continue. Sous le nuage, il y a une montagne solide — mon avantage prouvé. Je ne pousse pas, je ferme et j'ancre.",
   explication:
     "Chaque palier retiré sous 24h remonte le thermostat d'un cran. Ne jamais sauter de marche.",
 }
@@ -132,4 +135,37 @@ export const ANCRAGES = [
   'Je lis la structure sur M5. Je ferme sur M1.',
   'Ce ne sont que des chiffres. Je reste léger.',
   "J'ai fait ma journée. Je ferme MT4 et TradingView.",
+]
+
+// ===========================================================
+// MENTAL HAND HISTORY (Jared Tendler, "Le Jeu Mental du Trading")
+// L'outil central de correction de la racine. 5 étapes.
+// ===========================================================
+export const MHH_STEPS = [
+  { key: 'probleme', q: 'Quel est le problème ?' },
+  { key: 'pourquoi', q: 'Pourquoi le problème existe-t-il ?' },
+  { key: 'errone', q: "Qu'est-ce qui est erroné dans cette pensée ?" },
+  { key: 'correction', q: 'Quelle est la correction ?' },
+  { key: 'logique', q: 'Quelle logique confirme cette correction ?' },
+]
+
+// Corrections suggérées par pattern (pré-remplissage de l'étape "correction")
+export const MHH_CORRECTIONS = {
+  sortie_soulagement:
+    "Sortie par soulagement, pas par signal. Le retest est normal après franchissement Tenkan/Kijun. Mon SL/TP est le seul juge. Je laisse courir, le parcours continue.",
+  pousser_prix:
+    "Ambition maîtrisée : je sais quand pousser mon avantage et quand m'arrêter. Je lis la structure sur M5, pas l'argent. Pousser le prix est une illusion de contrôle.",
+  insatisfaction_gain:
+    "Le succès n'est pas 'normal', il mérite reconnaissance. La boucle se ferme par l'ancrage du palier, pas par le chiffre suivant.",
+  glissement_objectif:
+    "Mon objectif est fixé par le plan (+10%), pas par l'émotion. 'Revenir à zéro' est un signal de tilt, pas un objectif.",
+  thermostat:
+    "Peu importe la mise, chaque trade exerce mon avantage. Augmenter n'est pas une décision définitive : que je gagne ou perde, le parcours continue.",
+}
+
+// --- Valoriser ses accomplissements (Tendler p.78) — ferme la boucle ---
+export const SUCCESS_QUESTIONS = [
+  'Pourquoi cet accomplissement est-il précieux ?',
+  "Qu'est-ce qui le rendait difficile à atteindre ?",
+  'Comment as-tu réussi — quels efforts, et qu\'as-tu appris ?',
 ]

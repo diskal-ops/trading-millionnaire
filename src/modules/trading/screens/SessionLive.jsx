@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useSpeech } from '../../../core/hooks/useSpeech.js'
 import { useAppStore } from '../../../core/store/useAppStore.js'
@@ -16,6 +17,7 @@ const COACH_SYSTEM =
 
 export default function SessionLive() {
   const { t, lang } = useI18n()
+  const nav = useNavigate()
   const { saveSession, addPattern } = useAppStore()
 
   const [state, setState] = useState(STATES.ATTENTE_SETUP)
@@ -193,9 +195,19 @@ export default function SessionLive() {
             <Button variant="alert" onClick={finish}>{t('session.closeDay')}</Button>
           )}
           {state === STATES.CLOTURE && (
-            <p className="serif center" style={{ fontSize: 18 }}>
-              {STATE_MESSAGES[STATES.CLOTURE]}
-            </p>
+            <div className="stack" style={{ gap: 12 }}>
+              <p className="serif center" style={{ fontSize: 18 }}>
+                {STATE_MESSAGES[STATES.CLOTURE]}
+              </p>
+              {lastCoup && (
+                <Button
+                  variant="ghost"
+                  onClick={() => nav('/mhh', { state: { pattern: coupToPattern(lastCoup.id) } })}
+                >
+                  🧭 {t('mhh.fromSession')}
+                </Button>
+              )}
+            </div>
           )}
           {state !== STATES.CLOTURE && state !== STATES.GESTION && (
             <button onClick={advance} style={{ background: 'none', border: 'none', color: 'var(--text-faint)', cursor: 'pointer', fontSize: 12 }}>

@@ -9,6 +9,7 @@ import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
 import Discipline from './core/screens/Discipline.jsx'
+import MentalHandHistory from './modules/trading/screens/MentalHandHistory.jsx'
 
 registerAllModules()
 
@@ -44,6 +45,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/discipline" element={<Discipline />} />
+          <Route path="/mhh" element={<MentalHandHistory />} />
           <Route path="/insights" element={<Insights />} />
           {moduleRoutes.map((r) => (
             <Route key={r.path} path={r.path} element={r.element} />

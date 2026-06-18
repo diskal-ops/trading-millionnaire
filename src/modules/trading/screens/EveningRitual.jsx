@@ -1,18 +1,20 @@
 import React, { useState } from 'react'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useAppStore } from '../../../core/store/useAppStore.js'
-import { Card, Button, Field, Input, Stat } from '../../../ui/index.jsx'
-import { marcheDepuisBalance, prochainPalier } from '../data.js'
+import { Card, Button, Field, Input, Stat, Affirm } from '../../../ui/index.jsx'
+import { marcheDepuisBalance, prochainPalier, SUCCESS_QUESTIONS } from '../data.js'
 
 export default function EveningRitual() {
   const { t } = useI18n()
-  const { balance, setBalance, upsertDailyLog } = useAppStore()
+  const { balance, setBalance, upsertDailyLog, addSuccess } = useAppStore()
 
   const [bal, setBal] = useState(balance)
   const [sleepPlan, setSleepPlan] = useState('')
   const [nutrition, setNutrition] = useState(true)
   const [feeling, setFeeling] = useState('')
   const [saved, setSaved] = useState(false)
+  const [succ, setSucc] = useState(['', '', ''])
+  const [succSaved, setSuccSaved] = useState(false)
 
   const marche = marcheDepuisBalance(Number(bal))
   const next = prochainPalier(marche)
@@ -48,6 +50,30 @@ export default function EveningRitual() {
           )}
         </div>
       </Card>
+
+      {/* Valoriser le succès — ferme la boucle (Tendler) */}
+      {marche >= next.marche && (
+        <Card tone="calm">
+          <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>🌟 {t('success.title')}</div>
+          <Affirm>{t('success.intro', { palier: next.label })}</Affirm>
+          <div className="stack" style={{ gap: 8, marginTop: 12 }}>
+            {SUCCESS_QUESTIONS.map((q, i) => (
+              <label key={i}>
+                <span className="muted" style={{ fontSize: 13, display: 'block', marginBottom: 4 }}>{q}</span>
+                <Input value={succ[i]} onChange={(e) => setSucc((s) => s.map((x, j) => (j === i ? e.target.value : x)))} />
+              </label>
+            ))}
+            <Button
+              variant="calm"
+              disabled={!succ[0].trim()}
+              style={{ opacity: succ[0].trim() ? 1 : 0.5 }}
+              onClick={() => { addSuccess({ palier: next.label, reponses: succ }); setSuccSaved(true) }}
+            >
+              {succSaved ? '✓ ' + t('common.saved') : t('success.save')}
+            </Button>
+          </div>
+        </Card>
+      )}
 
       <Card>
         <div className="stack">

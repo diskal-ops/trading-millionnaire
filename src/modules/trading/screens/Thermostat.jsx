@@ -1,12 +1,14 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../../../core/i18n/index.jsx'
 import { useAppStore } from '../../../core/store/useAppStore.js'
-import { Card, Affirm } from '../../../ui/index.jsx'
+import { Card, Affirm, Button } from '../../../ui/index.jsx'
 import { Gauge } from '../../../ui/Gauge.jsx'
 import { THERMOSTAT } from '../data.js'
 
 export default function Thermostat() {
   const { t } = useI18n()
+  const nav = useNavigate()
   const { balance, previousHigh } = useAppStore()
   const unknown = balance > previousHigh
 
@@ -28,10 +30,21 @@ export default function Thermostat() {
       </Card>
 
       {unknown && (
-        <Card tone="alert">
-          <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>⚠ {t('thermostat.unknown')}</div>
-          <Affirm>{THERMOSTAT.alerte}</Affirm>
-        </Card>
+        <>
+          <Card tone="alert">
+            <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>⚠ {t('thermostat.unknown')}</div>
+            <Affirm>{THERMOSTAT.alerte}</Affirm>
+          </Card>
+          <Card tone="calm">
+            <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>↺ {t('thermostat.reframe')}</div>
+            <Affirm>{THERMOSTAT.reframe}</Affirm>
+            <div style={{ marginTop: 12 }}>
+              <Button variant="ghost" onClick={() => nav('/mhh', { state: { pattern: 'thermostat' } })}>
+                🧭 {t('mhh.open')}
+              </Button>
+            </div>
+          </Card>
+        </>
       )}
 
       <Card tone="calm">

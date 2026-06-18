@@ -70,5 +70,18 @@
   "discipline.markWon": "Día ganado",
   "discipline.markLost": "Día fallado",
   "discipline.wonToday": "Día ganado. Mantuviste el ciclo.",
-  "discipline.identity": "Ganas el día incluso a +0%. Eso es el observador disciplinado."
+  "discipline.identity": "Ganas el día incluso a +0%. Eso es el observador disciplinado.",
+  "discipline.evenLoss": "Un día se gana incluso con pérdida, siempre que hayas mantenido el ciclo. Celébralo.",
+  "mhh.title": "Mental Hand History",
+  "mhh.subtitle": "Encuentra la raíz, corrige la creencia. La herramienta de Tendler.",
+  "mhh.from": "Desde el patrón",
+  "mhh.open": "Mental Hand History",
+  "mhh.save": "Guardar la corrección",
+  "mhh.history": "Historial",
+  "mhh.fromSession": "Analizar este pico de presión",
+  "gam.rank": "Rango",
+  "gam.badges": "Trofeos",
+  "success.title": "Valorar el éxito",
+  "success.intro": "Peldaño “{palier}” alcanzado. Antes de seguir: cierra el ciclo.",
+  "success.save": "Anclar este éxito"
 }

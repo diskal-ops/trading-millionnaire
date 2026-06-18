@@ -70,5 +70,18 @@
   "discipline.markWon": "Day won",
   "discipline.markLost": "Day missed",
   "discipline.wonToday": "Day won. You held the loop.",
-  "discipline.identity": "You win the day even at +0%. That's the disciplined observer."
+  "discipline.identity": "You win the day even at +0%. That's the disciplined observer.",
+  "discipline.evenLoss": "A day is won even with a loss, as long as you held the loop. Celebrate it.",
+  "mhh.title": "Mental Hand History",
+  "mhh.subtitle": "Find the root, fix the belief. Tendler's tool.",
+  "mhh.from": "From pattern",
+  "mhh.open": "Mental Hand History",
+  "mhh.save": "Save the correction",
+  "mhh.history": "History",
+  "mhh.fromSession": "Analyse this pressure point",
+  "gam.rank": "Rank",
+  "gam.badges": "Trophies",
+  "success.title": "Value the win",
+  "success.intro": "Milestone “{palier}” reached. Before moving on: close the loop.",
+  "success.save": "Anchor this win"
 }

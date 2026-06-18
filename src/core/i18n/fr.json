@@ -70,5 +70,18 @@
   "discipline.markWon": "Journée gagnée",
   "discipline.markLost": "Journée manquée",
   "discipline.wonToday": "Journée gagnée. Tu as tenu la boucle.",
-  "discipline.identity": "Tu gagnes la journée même à +0%. C'est ça, l'observateur discipliné."
+  "discipline.identity": "Tu gagnes la journée même à +0%. C'est ça, l'observateur discipliné.",
+  "discipline.evenLoss": "Une journée est gagnée même avec une perte, tant que tu as respecté la boucle. Célèbre-la.",
+  "mhh.title": "Mental Hand History",
+  "mhh.subtitle": "Trouve la racine, corrige la croyance. L'outil de Tendler.",
+  "mhh.from": "Depuis le pattern",
+  "mhh.open": "Mental Hand History",
+  "mhh.save": "Enregistrer la correction",
+  "mhh.history": "Historique",
+  "mhh.fromSession": "Analyser ce coup de pression",
+  "gam.rank": "Rang",
+  "gam.badges": "Trophées",
+  "success.title": "Valoriser le succès",
+  "success.intro": "Palier « {palier} » atteint. Avant de passer à la suite : ferme la boucle.",
+  "success.save": "Ancrer ce succès"
 }

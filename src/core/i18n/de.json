@@ -70,5 +70,18 @@
   "discipline.markWon": "Tag gewonnen",
   "discipline.markLost": "Tag verpasst",
   "discipline.wonToday": "Tag gewonnen. Du hast die Schleife gehalten.",
-  "discipline.identity": "Du gewinnst den Tag auch bei +0%. Das ist der disziplinierte Beobachter."
+  "discipline.identity": "Du gewinnst den Tag auch bei +0%. Das ist der disziplinierte Beobachter.",
+  "discipline.evenLoss": "Ein Tag ist gewonnen, auch mit Verlust, solange du die Schleife gehalten hast. Feiere ihn.",
+  "mhh.title": "Mental Hand History",
+  "mhh.subtitle": "Finde die Wurzel, korrigiere die Überzeugung. Tendlers Werkzeug.",
+  "mhh.from": "Aus Muster",
+  "mhh.open": "Mental Hand History",
+  "mhh.save": "Korrektur speichern",
+  "mhh.history": "Verlauf",
+  "mhh.fromSession": "Diesen Druckpunkt analysieren",
+  "gam.rank": "Rang",
+  "gam.badges": "Trophäen",
+  "success.title": "Den Erfolg würdigen",
+  "success.intro": "Stufe „{palier}“ erreicht. Bevor du weitergehst: schließe die Schleife.",
+  "success.save": "Diesen Erfolg verankern"
 }
