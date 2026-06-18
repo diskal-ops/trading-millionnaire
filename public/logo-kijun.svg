@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" width="520" height="160" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1e26"/><stop offset="1" stop-color="#0e0f13"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#B89238"/><stop offset="1" stop-color="#E8B84B"/>
+    </linearGradient>
+  </defs>
+  <rect width="520" height="160" rx="20" fill="url(#bg)"/>
+  <!-- symbole -->
+  <rect x="70" y="32" width="96" height="96" rx="22" fill="#14161c" stroke="#2e333f"/>
+  <g>
+    <rect x="95" y="66" width="46" height="2.5" rx="1.2" fill="#E8B84B" opacity="0.18"/>
+    <rect x="95" y="92" width="46" height="2.5" rx="1.2" fill="#E8B84B" opacity="0.18"/>
+    <rect x="95" y="78" width="46" height="5" rx="2.5" fill="url(#gold)"/>
+    <rect x="114" y="71" width="8" height="18" rx="4" fill="#14161c"/>
+    <rect x="116" y="73" width="4" height="14" rx="2" fill="#E8B84B"/>
+  </g>
+  <!-- wordmark -->
+  <text x="196" y="92" font-size="40" font-weight="600" letter-spacing="13.6" fill="#E7E9EE">KIJUN</text>
+  <rect x="196" y="104" width="270" height="3" rx="1.5" fill="url(#gold)"/>
+</svg>

@@ -47,7 +47,7 @@ export default function App() {
     <div className="app-shell">
       <header className="spread" style={{ padding: '18px 0 8px' }}>
         <div className="row" style={{ gap: 10 }}>
-          <span style={{ width: 12, height: 12, borderRadius: 3, background: 'var(--gold)' }} />
+          <img src="/favicon.svg" alt="" width="24" height="24" style={{ borderRadius: 6 }} />
           <span style={{ fontWeight: 700, letterSpacing: '0.18em' }}>{t('app.name')}</span>
           <span className="faint" style={{ fontSize: 12 }}>{t('app.tagline')}</span>
         </div>
