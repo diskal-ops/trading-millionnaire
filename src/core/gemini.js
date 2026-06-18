@@ -9,7 +9,7 @@
 
 import { supabase, hasSupabase } from './supabaseClient.js'
 
-const FN = import.meta.env.VITE_GEMINI_PROXY_FN || 'gemini-proxy'
+const FN = import.meta.env.VITE_GEMINI_PROXY_FN || 'kijun-gemini-proxy'
 
 /**
  * Demande une réponse de coaching courte au proxy Gemini.

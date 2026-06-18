@@ -83,5 +83,10 @@
   "gam.badges": "Trophäen",
   "success.title": "Den Erfolg würdigen",
   "success.intro": "Stufe „{palier}“ erreicht. Bevor du weitergehst: schließe die Schleife.",
-  "success.save": "Diesen Erfolg verankern"
+  "success.save": "Diesen Erfolg verankern",
+  "backup.title": "Lokale Sicherung",
+  "backup.desc": "Deine Daten liegen auf diesem PC. Exportiere eine Datei, um nie etwas zu verlieren.",
+  "backup.export": "Exportieren",
+  "backup.import": "Importieren",
+  "backup.imported": "Sicherung importiert."
 }

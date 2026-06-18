@@ -4,7 +4,7 @@ import { registerAllModules } from './modules/index.js'
 import { getAllRoutes } from './core/moduleRegistry.js'
 import { useI18n } from './core/i18n/index.jsx'
 import { useAppStore } from './core/store/useAppStore.js'
-import { hasSupabase } from './core/supabaseClient.js'
+import { cloudData } from './core/supabaseClient.js'
 import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
@@ -27,7 +27,7 @@ export default function App() {
   const hydrate = useAppStore((s) => s.hydrateFromSupabase)
 
   useEffect(() => {
-    if (hasSupabase) hydrate()
+    if (cloudData) hydrate()
   }, [hydrate])
 
   return (

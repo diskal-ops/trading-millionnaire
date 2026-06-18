@@ -83,5 +83,10 @@
   "gam.badges": "Trophies",
   "success.title": "Value the win",
   "success.intro": "Milestone “{palier}” reached. Before moving on: close the loop.",
-  "success.save": "Anchor this win"
+  "success.save": "Anchor this win",
+  "backup.title": "Local backup",
+  "backup.desc": "Your data lives on this PC. Export a file so you never lose anything.",
+  "backup.export": "Export",
+  "backup.import": "Import",
+  "backup.imported": "Backup imported."
 }

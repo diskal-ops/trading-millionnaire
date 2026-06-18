@@ -1,15 +1,36 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { useI18n } from '../i18n/index.jsx'
 import { useAppStore } from '../store/useAppStore.js'
 import { runCorrelations } from '../correlationEngine.js'
-import { Card } from '../../ui/index.jsx'
+import { Card, Button } from '../../ui/index.jsx'
 
 const TONE = { fragile: 'alert', warn: undefined, info: 'calm' }
 
 export default function Insights() {
   const { t } = useI18n()
-  const { dailyLog, sessions } = useAppStore()
+  const { dailyLog, sessions, exportState, importState } = useAppStore()
   const insights = useMemo(() => runCorrelations(dailyLog), [dailyLog])
+  const fileRef = useRef(null)
+
+  const download = () => {
+    const blob = new Blob([JSON.stringify(exportState(), null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `kijun-sauvegarde-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+  const onFile = (e) => {
+    const f = e.target.files?.[0]
+    if (!f) return
+    const r = new FileReader()
+    r.onload = () => {
+      try { importState(JSON.parse(r.result)); alert(t('backup.imported')) }
+      catch (err) { alert(err.message) }
+    }
+    r.readAsText(f)
+  }
 
   return (
     <div className="stack">
@@ -31,6 +52,16 @@ export default function Insights() {
           <p className="muted" style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}>{i.detail}</p>
         </Card>
       ))}
+
+      <Card>
+        <div className="faint" style={{ fontSize: 12, marginBottom: 10 }}>💾 {t('backup.title')}</div>
+        <p className="muted" style={{ fontSize: 13, margin: '0 0 12px' }}>{t('backup.desc')}</p>
+        <div className="row" style={{ gap: 10 }}>
+          <Button variant="ghost" onClick={download}>↓ {t('backup.export')}</Button>
+          <Button variant="ghost" onClick={() => fileRef.current?.click()}>↑ {t('backup.import')}</Button>
+          <input ref={fileRef} type="file" accept="application/json" onChange={onFile} style={{ display: 'none' }} />
+        </div>
+      </Card>
 
       <Card>
         <div className="faint" style={{ fontSize: 12, marginBottom: 8 }}>Sessions récentes</div>

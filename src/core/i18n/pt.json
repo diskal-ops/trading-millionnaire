@@ -83,5 +83,10 @@
   "gam.badges": "Troféus",
   "success.title": "Valorizar o êxito",
   "success.intro": "Marco “{palier}” alcançado. Antes de avançar: fecha o ciclo.",
-  "success.save": "Ancorar este êxito"
+  "success.save": "Ancorar este êxito",
+  "backup.title": "Cópia local",
+  "backup.desc": "Os teus dados vivem neste PC. Exporta um ficheiro para nunca perderes nada.",
+  "backup.export": "Exportar",
+  "backup.import": "Importar",
+  "backup.imported": "Cópia importada."
 }

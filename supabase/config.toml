@@ -1,5 +1,9 @@
 project_id = "kijun"
 
+# Fonction isolée déployée dans le projet Robiin (mono-utilisateur, sans auth).
+[functions.kijun-gemini-proxy]
+verify_jwt = false
+
+# Variante "projet KIJUN dédié" (plus tard, avec auth) — laissée pour mémoire.
 [functions.gemini-proxy]
-# verify_jwt = true par défaut : seul un utilisateur authentifié peut appeler le proxy.
 verify_jwt = true

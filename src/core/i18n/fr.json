@@ -83,5 +83,10 @@
   "gam.badges": "Trophées",
   "success.title": "Valoriser le succès",
   "success.intro": "Palier « {palier} » atteint. Avant de passer à la suite : ferme la boucle.",
-  "success.save": "Ancrer ce succès"
+  "success.save": "Ancrer ce succès",
+  "backup.title": "Sauvegarde locale",
+  "backup.desc": "Tes données vivent sur ce PC. Exporte un fichier pour ne jamais rien perdre.",
+  "backup.export": "Exporter",
+  "backup.import": "Importer",
+  "backup.imported": "Sauvegarde importée."
 }

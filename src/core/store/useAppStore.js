@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { supabase, hasSupabase } from '../supabaseClient.js'
+import { supabase, cloudData } from '../supabaseClient.js'
 
 /* ===========================================================
    Store global (zustand)
@@ -36,7 +36,7 @@ export const useAppStore = create(
       saveMHH: (entry) => {
         const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
         set((s) => ({ mhhEntries: [e, ...s.mhhEntries] }))
-        if (hasSupabase) get()._syncRow('mhh', e)
+        if (cloudData) get()._syncRow('mhh', e)
         return e
       },
 
@@ -45,7 +45,7 @@ export const useAppStore = create(
       addSuccess: (entry) => {
         const e = { id: crypto.randomUUID(), date: todayISO(), ...entry }
         set((s) => ({ successJournal: [e, ...s.successJournal] }))
-        if (hasSupabase) get()._syncRow('success_journal', e)
+        if (cloudData) get()._syncRow('success_journal', e)
         return e
       },
 
@@ -60,7 +60,7 @@ export const useAppStore = create(
           const rest = s.dailyLog.filter((d) => d.date !== date)
           return { dailyLog: [...rest, merged] }
         })
-        if (hasSupabase) get()._syncDailyLog(date)
+        if (cloudData) get()._syncDailyLog(date)
       },
 
       addPattern: (pattern, date = todayISO()) =>
@@ -79,7 +79,7 @@ export const useAppStore = create(
       saveSession: (session) => {
         const entry = { id: crypto.randomUUID(), date: todayISO(), ...session }
         set((s) => ({ sessions: [entry, ...s.sessions] }))
-        if (hasSupabase) get()._syncSession(entry)
+        if (cloudData) get()._syncSession(entry)
         return entry
       },
 
@@ -102,6 +102,27 @@ export const useAppStore = create(
         const { data: u } = await supabase.auth.getUser()
         if (!u?.user) return
         await supabase.from(table).insert({ ...entry, user_id: u.user.id })
+      },
+
+      // --- Sauvegarde locale (export / import fichier) ---
+      exportState: () => {
+        const s = get()
+        return {
+          _kijun: 1,
+          exportedAt: new Date().toISOString(),
+          balance: s.balance,
+          previousHigh: s.previousHigh,
+          dailyLog: s.dailyLog,
+          sessions: s.sessions,
+          discipline: s.discipline,
+          mhhEntries: s.mhhEntries,
+          successJournal: s.successJournal,
+        }
+      },
+      importState: (data) => {
+        if (!data || data._kijun !== 1) throw new Error('Fichier de sauvegarde KIJUN invalide')
+        const { _kijun, exportedAt, ...rest } = data
+        set((s) => ({ ...s, ...rest }))
       },
 
       hydrateFromSupabase: async () => {
