@@ -56,5 +56,19 @@
   "escalier.current": "Marche actuelle",
   "escalier.next": "Prochain palier",
   "escalier.in": "dans",
-  "escalier.final": "Objectif final : 20 millions"
+  "escalier.final": "Objectif final : 20 millions",
+  "nav.discipline": "Discipline",
+  "discipline.title": "Discipline",
+  "discipline.subtitle": "La constance se mesure en jours tenus, pas en gains.",
+  "discipline.streak": "Série en cours",
+  "discipline.best": "Meilleure série",
+  "discipline.days": "jours",
+  "discipline.today": "Aujourd'hui — as-tu tenu la boucle ?",
+  "discipline.check1": "Setup respecté, je n'ai rien forcé",
+  "discipline.check2": "Aucune sortie-soulagement",
+  "discipline.check3": "J'ai fermé ma journée",
+  "discipline.markWon": "Journée gagnée",
+  "discipline.markLost": "Journée manquée",
+  "discipline.wonToday": "Journée gagnée. Tu as tenu la boucle.",
+  "discipline.identity": "Tu gagnes la journée même à +0%. C'est ça, l'observateur discipliné."
 }

@@ -56,5 +56,19 @@
   "escalier.current": "Current step",
   "escalier.next": "Next milestone",
   "escalier.in": "in",
-  "escalier.final": "Final goal: 20 million"
+  "escalier.final": "Final goal: 20 million",
+  "nav.discipline": "Discipline",
+  "discipline.title": "Discipline",
+  "discipline.subtitle": "Consistency is measured in days held, not in gains.",
+  "discipline.streak": "Current streak",
+  "discipline.best": "Best streak",
+  "discipline.days": "days",
+  "discipline.today": "Today — did you hold the loop?",
+  "discipline.check1": "Setup respected, I forced nothing",
+  "discipline.check2": "No relief-exit",
+  "discipline.check3": "I closed my day",
+  "discipline.markWon": "Day won",
+  "discipline.markLost": "Day missed",
+  "discipline.wonToday": "Day won. You held the loop.",
+  "discipline.identity": "You win the day even at +0%. That's the disciplined observer."
 }

@@ -8,12 +8,14 @@ import { hasSupabase } from './core/supabaseClient.js'
 import { LangToggle } from './ui/index.jsx'
 import Home from './core/screens/Home.jsx'
 import Insights from './core/screens/Insights.jsx'
+import Discipline from './core/screens/Discipline.jsx'
 
 registerAllModules()
 
 const NAV = [
   { to: '/', key: 'nav.today', icon: '○' },
   { to: '/session', key: 'nav.session', icon: '🎙' },
+  { to: '/discipline', key: 'nav.discipline', icon: '🔥' },
   { to: '/escalier', key: 'nav.escalier', icon: '↗' },
   { to: '/insights', key: 'nav.insights', icon: '◇' },
 ]
@@ -41,6 +43,7 @@ export default function App() {
       <main style={{ paddingTop: 8 }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/discipline" element={<Discipline />} />
           <Route path="/insights" element={<Insights />} />
           {moduleRoutes.map((r) => (
             <Route key={r.path} path={r.path} element={r.element} />

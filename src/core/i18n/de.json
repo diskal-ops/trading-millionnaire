@@ -56,5 +56,19 @@
   "escalier.current": "Aktuelle Stufe",
   "escalier.next": "Nächster Meilenstein",
   "escalier.in": "in",
-  "escalier.final": "Endziel: 20 Millionen"
+  "escalier.final": "Endziel: 20 Millionen",
+  "nav.discipline": "Disziplin",
+  "discipline.title": "Disziplin",
+  "discipline.subtitle": "Beständigkeit misst sich in gehaltenen Tagen, nicht in Gewinnen.",
+  "discipline.streak": "Aktuelle Serie",
+  "discipline.best": "Beste Serie",
+  "discipline.days": "Tage",
+  "discipline.today": "Heute — hast du die Schleife gehalten?",
+  "discipline.check1": "Setup eingehalten, nichts erzwungen",
+  "discipline.check2": "Kein Erleichterungs-Ausstieg",
+  "discipline.check3": "Ich habe meinen Tag geschlossen",
+  "discipline.markWon": "Tag gewonnen",
+  "discipline.markLost": "Tag verpasst",
+  "discipline.wonToday": "Tag gewonnen. Du hast die Schleife gehalten.",
+  "discipline.identity": "Du gewinnst den Tag auch bei +0%. Das ist der disziplinierte Beobachter."
 }

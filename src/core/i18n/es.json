@@ -56,5 +56,19 @@
   "escalier.current": "Peldaño actual",
   "escalier.next": "Próximo hito",
   "escalier.in": "en",
-  "escalier.final": "Objetivo final: 20 millones"
+  "escalier.final": "Objetivo final: 20 millones",
+  "nav.discipline": "Disciplina",
+  "discipline.title": "Disciplina",
+  "discipline.subtitle": "La constancia se mide en días sostenidos, no en ganancias.",
+  "discipline.streak": "Racha actual",
+  "discipline.best": "Mejor racha",
+  "discipline.days": "días",
+  "discipline.today": "Hoy — ¿mantuviste el ciclo?",
+  "discipline.check1": "Setup respetado, no forcé nada",
+  "discipline.check2": "Ninguna salida por alivio",
+  "discipline.check3": "Cerré mi día",
+  "discipline.markWon": "Día ganado",
+  "discipline.markLost": "Día fallado",
+  "discipline.wonToday": "Día ganado. Mantuviste el ciclo.",
+  "discipline.identity": "Ganas el día incluso a +0%. Eso es el observador disciplinado."
 }

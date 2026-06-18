@@ -26,6 +26,11 @@ export const useAppStore = create(
           previousHigh: Math.max(s.previousHigh, Number(v) || 0),
         })),
 
+      // --- Discipline (course de fond) : { 'YYYY-MM-DD': 'won' | 'lost' } ---
+      discipline: {},
+      markDiscipline: (won, date = todayISO()) =>
+        set((s) => ({ discipline: { ...s.discipline, [date]: won ? 'won' : 'lost' } })),
+
       // --- daily_log (cœur, transverse) ---
       dailyLog: [], // [{ date, sommeil_h, sport_fait, nutrition_ok, trading_resultat, etat_mental, patterns_detectes[] }]
 

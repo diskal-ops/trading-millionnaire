@@ -56,5 +56,19 @@
   "escalier.current": "Degrau atual",
   "escalier.next": "Próximo marco",
   "escalier.in": "em",
-  "escalier.final": "Objetivo final: 20 milhões"
+  "escalier.final": "Objetivo final: 20 milhões",
+  "nav.discipline": "Disciplina",
+  "discipline.title": "Disciplina",
+  "discipline.subtitle": "A constância mede-se em dias mantidos, não em ganhos.",
+  "discipline.streak": "Sequência atual",
+  "discipline.best": "Melhor sequência",
+  "discipline.days": "dias",
+  "discipline.today": "Hoje — mantiveste o ciclo?",
+  "discipline.check1": "Setup respeitado, não forcei nada",
+  "discipline.check2": "Nenhuma saída por alívio",
+  "discipline.check3": "Fechei o meu dia",
+  "discipline.markWon": "Dia ganho",
+  "discipline.markLost": "Dia falhado",
+  "discipline.wonToday": "Dia ganho. Mantiveste o ciclo.",
+  "discipline.identity": "Ganhas o dia mesmo a +0%. É isso o observador disciplinado."
 }
