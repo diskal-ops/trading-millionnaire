@@ -78,15 +78,18 @@ export const THERMOSTAT = {
 // --- ESCALIER DE MANIFESTATION (données réelles, +10%/jour) ---
 // marche -> palier (retrait éventuel en €)
 export const ESCALIER = {
-  balanceDepart: 711,
+  balanceDepart: 230, // jour 1 de la feuille "Book1 manifestation" (et non 711)
   croissanceJour: 0.1, // +10% / jour
+  // marche = numéro de jour ouvrable (colonne "Niveau" de la feuille).
+  // retrait = ponction sur la balance (gros achats). Les petits achats
+  // (Jean, Hoodie, Poêle, Jordan) sont payés par la Cagnotte, sans retrait.
   paliers: [
     { marche: 5, label: 'Jean' },
     { marche: 8, label: 'Hoodie' },
     { marche: 12, label: 'Poêle inox 28cm' },
     { marche: 18, label: 'Pouf', retrait: 120 },
     { marche: 22, label: 'Jordan Horizon' },
-    { marche: 26, label: '3 chaises' },
+    { marche: 26, label: '3 chaises', retrait: 150 },
     { marche: 31, label: 'Lit fille', retrait: 350 },
     { marche: 37, label: 'Bureau assis-debout', retrait: 450 },
     { marche: 42, label: 'PS5', retrait: 550 },
@@ -98,11 +101,11 @@ export const ESCALIER = {
     { marche: 78, label: '10000€ parents', retrait: 15000 },
     { marche: 98, label: 'Panamera', retrait: 100000 },
     { marche: 108, label: 'Création entreprise', retrait: 100000 },
-    { marche: 139, label: '20 MILLIONS' },
     { marche: 177, label: 'Appartement', retrait: 600000 },
+    { marche: 179, label: '20 MILLIONS 🎯' },
     { marche: 183, label: 'Maison', retrait: 2500000 },
   ],
-  objectifFinal: { marche: 139, montant: 20000000 },
+  objectifFinal: { marche: 179, montant: 20000000 },
 }
 
 // Marche actuelle estimée à partir de la balance (départ * 1.1^n)
